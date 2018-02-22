@@ -60,7 +60,7 @@ def get_detection_type(detect_num):
 
 
 cropped_hili_img = "color-contour-crop.jpg"
-image = cv2.imread("highlight-sample.jpg")
+image = cv2.imread("sample_images/highlight-sample.jpg")
 
 # rgb to HSV color spave conversion
 hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -94,10 +94,10 @@ cv2.imwrite(cropped_hili_img, imgray)
 # cv2.imshow('Object detection', OutputImg)
 cv2.imwrite("color-thresh-result.jpg",OutputImg)
 
+output_filename='jsons/api_calls.json'
+convert_img_to_json([cropped_hili_img+" 7:10"], output_filename)
 
-convert_img_to_json([cropped_hili_img+" 7:10"], output_filename='api_calls.json')
-
-data = open('api_calls.json', 'rb').read()
+data = open(output_filename, 'rb').read()
 response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
     data=data,
     headers={'Content-Type': 'application/json'})
@@ -105,5 +105,5 @@ response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?k
 
 api_result = response.json()
 print api_result
-with open("api_result.json", 'w') as output_file:
+with open("jsons/api_result.json", 'w') as output_file:
     json.dump(api_result, output_file)
