@@ -81,7 +81,7 @@ def get_all_text(gcloud_data):
 
     return all_texts
 
-image_file = "images/highlight-sample.jpg"
+image_file = "sample_images/highlight-sample.jpg"
 json_data=open("jsons/api_result.json").read()
 
 data = json.loads(json_data)
