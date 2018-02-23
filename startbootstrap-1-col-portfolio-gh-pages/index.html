@@ -23,43 +23,55 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="http://shaham.me">Shaham.me</a>
+        <a class="navbar-brand btn btn-secondary navbtn" onclick="scrollToAnchor('mainhead');">Shaham.me</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <!-- <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
-              </a>
+              <a  onclick="scrollToAnchor('lexsongreco');"  class="btn btn-success navbtn btn-sm">Lex-Song-Reco</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+                <a onclick="scrollToAnchor('nlplit');"  class="btn btn-primary navbtn btn-sm">NLP-Lit-Analysis</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
+                <a onclick="scrollToAnchor('nlpphil');"  class="btn btn-primary navbtn btn-sm">NLP-Philosophize-Graph</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
+                <a onclick="scrollToAnchor('languageessay');"  class="btn btn-warning navbtn btn-sm">Inadequate-Language-Essay</a>
             </li>
-          </ul> -->
+            <li class="nav-item">
+                <a onclick="scrollToAnchor('grasshopr');"  class="btn navbtn btn-success btn-sm">Grasshopr</a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
 
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container" id="mainhead">
       <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-3">things I've done.</h1>
     <p class="lead">This is a listing of my projects and writeups. <br>I generally do side projects around Natural Language Processing (#NLP) and its potential usage for non-technical things (fiction literary analysis, song recommendations, philosophy readings, etc.). Occasionally, I'll write an essay.</p>
-
-          <button href="#lexsongreco" type="button" class="btn btn-secondary btn-sm">Lex-Song-Reco</button>
-        <button href="#nlplit" type="button" class="btn btn-secondary btn-sm">NLP-Lit-Analysis</button>
-        <button href="#nlpphil" type="button" class="btn btn-secondary btn-sm">NLP-Philosophize-Graph</button>
-        <button href="#languageessay" type="button" class="btn btn-secondary btn-sm">Inadequate-Language-Essay</button>
+    <!-- </div> -->
+       <!--      
+              <a  onclick="scrollToAnchor('lexsongreco');"  class="btn btn-success navbtn btn-sm">Lex-Song-Reco</a>
+            
+            
+                <a onclick="scrollToAnchor('nlplit');"  class="btn btn-primary navbtn btn-sm">NLP-Lit-Analysis</a>
+            
+            
+                <a onclick="scrollToAnchor('nlpphil');"  class="btn btn-primary navbtn btn-sm">NLP-Philosophize-Graph</a>
+            
+            
+                <a onclick="scrollToAnchor('languageessay');"  class="btn btn-warning navbtn btn-sm">Inadequate-Language-Essay</a>
+            
+            
+                <a onclick="scrollToAnchor('grasshopr');"  class="btn navbtn btn-success btn-sm">Grasshopr</a>
+        -->      
   </div>
 </div>
       <!-- Page Heading -->
@@ -68,15 +80,16 @@
       </h1>
  -->
       <!-- Project One -->
-      <div class="row" id="lexsongreco">
+      <div class="row project-div" id="lexsongreco">
         <div class="col-md-7">
           <a href="http://songreco.shaham.me/">
-            <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/700x300" alt="">
+            <img class="img-fluid rounded mb-3 mb-md-0" src="imgs/songreco.png" alt="">
           </a>
         </div>
         <div class="col-md-5">
           <h3>Lexical Song Recommendation</h3>
           <p>A Web App that reccommends you songs from pre-set playlists based on lyrical lexical qualities. Input a song you like or a block of text and I will recommend you a playlist, show you some fancy graphs, and let you automatically create a Spotify playlist!</p>
+          <a class="btn btn-success" href="https://songreco.shaham.me">View WebApp</a>
         </div>
       </div>
       <!-- /.row -->
@@ -84,14 +97,14 @@
       <hr>
 
       <!-- Project Two -->
-      <div class="row" id="nlplit">
+      <div class="row project-div" id="nlplit">
         <div class="col-md-7">
           <a href="https://medium.com/@shahamfarooq/who-is-holden-caulfield-aa5ef13005bc">
-            <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/700x300" alt="">
+            <img class="img-fluid rounded mb-3 mb-md-0" src="imgs/nlplit.png" height="300" alt="">
           </a>
         </div>
         <div class="col-md-5">
-          <h3>Who is Holden Caulfield? A NLP Approach.</h3>
+          <h3>Who is Holden Caulfield? A NLP Approach</h3>
           <p>A NLP Sentiment Analysis accross chapters of a novel (The Catcher in the Rye) to capture patterns and trends as an enhancement to literary analysis. Used IBM's Bluemix and Watson APIs and wrote an essay on the pros/cons of this approach.</p>
           <a class="btn btn-primary" href="https://medium.com/@shahamfarooq/who-is-holden-caulfield-aa5ef13005bc">View WriteUp</a>
         </div>
@@ -101,15 +114,15 @@
       <hr>
 
       <!-- Project Three -->
-      <div class="row" id="nlpphil">
+      <div class="row project-div" id="nlpphil">
         <div class="col-md-7">
           <a href="https://medium.com/@shahamfarooq/what-do-i-philosophize-next-a-nlp-approach-d97d4465e7ae">
-            <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/700x300" alt="">
+            <img class="img-fluid rounded mb-3 mb-md-0" src="imgs/nlpphil.png" alt="">
           </a>
         </div>
         <div class="col-md-5">
-          <h3>Automatic Graph Generation from connections accross documents using NLP</h3>
-          <p>A Natural Language Processing approach to automatically detect connections through key entities and ideas accross articles/documents. I analysed a set of philosophy articles to see which Entities related them to each other and if this could guide our choice of reading.</p>
+          <h3>Automatic Graph Generation accross Philosphy Articles</h3>
+          <p>A Natural Language Processing (NLP) approach to automatically detect connections through key entities and ideas accross articles/documents. I analysed a set of philosophy articles to see which Entities related them to each other and if this could guide our choice of reading.</p>
           <a class="btn btn-primary" href="https://medium.com/@shahamfarooq/what-do-i-philosophize-next-a-nlp-approach-d97d4465e7ae">View WriteUp</a>
         </div>
       </div>
@@ -118,17 +131,35 @@
       <hr>
 
       <!-- Project Four -->
-      <div class="row" id="languageessay">
+      <div class="row project-div" id="languageessay">
 
         <div class="col-md-7">
           <a href="https://medium.com/indian-thoughts/on-the-inadequacy-of-language-6371b08db9bf">
-            <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/700x300" alt="">
+            <img class="img-fluid rounded mb-3 mb-md-0" src="imgs/inadlang.jpeg" height="300" alt="">
           </a>
         </div>
         <div class="col-md-5">
-          <h3>On the Inadequcy of Language: An Essay</h3>
-          <p>A short essay on the neverending, human desire for communication and its inevitable unfullfillment.</p>
-          <a class="btn btn-primary" href="https://medium.com/indian-thoughts/on-the-inadequacy-of-language-6371b08db9bf">View Essay</a>
+          <h3>On the Inadequcy of Language - An Essay</h3>
+          <p>A short essay on the neverending, human desire for communication and its inevitable unfullfillment.<br><br><i>
+          "As Sartre had philosophically noted and the sociologist Goffman had socially observed: we are always in a state of 'performance' (always presenting an image of the self, always 'existing'). And so, silence betrays us just the same - communicating a 'state of self' to others that we do not wish to be understood as. We are condemned to be free said Sartre, maybe we are equally <b>condemned to communicate</b>."</i></p>
+          <a class="btn btn-warning" href="https://medium.com/indian-thoughts/on-the-inadequacy-of-language-6371b08db9bf">View Essay</a>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Project Five -->
+      <div class="row project-div" id="grasshopr">
+
+        <div class="col-md-7">
+          <a href="https://grasshopr.ca">
+            <img class="img-fluid rounded mb-3 mb-md-0" src="imgs/grasshoprlogo.png" alt="">
+          </a>
+        </div>
+        <div class="col-md-5">
+          <h3>Grasshopr - A start-up to accelerate grassroots fundraising</h3>
+          <p>While many other industries are leveraging new age data analytics and tools, non-profits, especially at a grassroots level, lag behind. Grasshopr is an ongoing business that aims to bring grassroots non-profits up to date with the latest data collection, organization, and analytics tool. Our main product at the moment is a web-based live fundraising instance to aid in donation campaigns.</p>
+          <a class="btn btn-success" href="https://grasshopr.ca">View WebSite</a>
         </div>
       </div>
       <!-- /.row -->
@@ -176,5 +207,10 @@
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   </body>
-
+  <script>
+    function scrollToAnchor(aid){
+      var aTag = $("#"+aid);
+      $('html,body').animate({scrollTop: aTag.offset().top-80},'slow');
+    }
+    </script>
 </html>

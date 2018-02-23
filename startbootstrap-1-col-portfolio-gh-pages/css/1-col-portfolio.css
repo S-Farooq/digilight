@@ -17,3 +17,16 @@ body {
 .pagination {
   margin-bottom: 15px;
 }
+
+.nav-item{
+	padding: 2px 2px 2px 2px;
+}
+
+.navbtn {
+	color: white !important;
+}
+/*
+.project-div {
+	padding-top:15px;
+	padding-bottom:15px;
+}*/
