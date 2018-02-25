@@ -65,8 +65,7 @@ def get_detection_type(detect_num):
     else:
         return DETECTION_TYPES[0]
 
-
-def google_ocr_img(img_path):
+def contour_img(img_path):
     cropped_hili_img = img_path
     image = cv2.imread(img_path)
 
@@ -97,8 +96,9 @@ def google_ocr_img(img_path):
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
     return str(cropped_hili_img)
     cv2.imwrite(cropped_hili_img, imgray)
-
-    data = convert_img_to_json([cropped_hili_img+" 7:5"])
+    
+def google_ocr_img(img_path):
+    data = convert_img_to_json([img_path+" 7:5"])
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=data,
         headers={'Content-Type': 'application/json'})
