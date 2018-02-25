@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append('/usr/local/lib/python2.7/site-packages')
     
 import json, base64, binascii,hashlib
 from evernote.api.client import EvernoteClient
