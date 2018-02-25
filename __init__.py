@@ -11,7 +11,7 @@ import json
 import base64
 import urllib, difflib
 
-
+import hili as hili
 
 
 
@@ -66,8 +66,9 @@ def my_form():
 def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
+        ocr_text = create_note_from_highlight(UPLOAD_FOLDER+image_file)
         # return filename
-    return render_template("index.html", output_print=str(request.files['images']))
+    return render_template("index.html", output_print=str(ocr_text), file_path=str(UPLOAD_FOLDER+image_file))
 
 
 if __name__ == '__main__':
