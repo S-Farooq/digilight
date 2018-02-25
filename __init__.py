@@ -48,7 +48,7 @@ def my_form():
 
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    output_print = str(request.form) 
+    output_print = str(request.form['submit_image']) 
     return render_template("index.html", output_print=output_print)
 
 if __name__ == '__main__':
