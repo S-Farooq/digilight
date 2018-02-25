@@ -62,16 +62,10 @@
       <div class="container">
         <div class="intro-text">
           <div class="intro-lead-in">Digilight your Highlights.</div>
-          <p>{{ output_print }}</p>          
+                  
       </div>
-    </header>
-
-    <!-- Services -->
-    <section id="services">
-      <div class="container">
-        
-        <div class="row">
-         <form action="multiupload.php" method="post" enctype="multipart/form-data">
+      <div class="row">
+         <form method="POST" enctype="multipart/form-data">
           <div class="col-md-6">
               <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images();" multiple/>
           </div>
@@ -80,9 +74,16 @@
           </div>
          </form>
          </div>
-         <div class="row" id="image_preview"></div>
+    </header>
+
+    <!-- Services -->
+    <section id="services">
+      <div class="container">
         
-      </div>
+               <div class="row" id="image_preview"></div>
+
+                 <p>{{ output_print }}</p>
+        </div>
     </section>
 
     
