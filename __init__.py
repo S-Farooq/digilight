@@ -29,7 +29,12 @@ CLIENT_SECRET = data['client_secret']
 
 photos = UploadSet('photos', IMAGES)
 
-app.config['UPLOADED_PHOTOS_DEST'] = 'static/upload_img'
+UPLOAD_FOLDER = '/var/www/Digilight/digilight/uploads/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_FOLDER
 configure_uploads(app, photos)
 
 
@@ -61,7 +66,7 @@ def my_form():
 def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
-        return filename
+        # return filename
     return render_template("index.html", output_print=str(request.files['images']))
 
 
