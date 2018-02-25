@@ -62,7 +62,7 @@ def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
         return filename
-    return render_template("index.html", output_print=str(request.files['photo']))
+    return render_template("index.html", output_print=str(request.files['images']))
 
 
 if __name__ == '__main__':
