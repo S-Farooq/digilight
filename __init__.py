@@ -70,7 +70,7 @@ def upload():
         # op = hili.google_ocr_img(contoured_img)
         # ocr_text = hili.create_note_from_highlight(UPLOAD_FOLDER+filename)
         # return filename
-    return render_template("index.html", output_print=str(contoured_img), file_path=str("uploads/"+filename))
+    return render_template("index.html", output_print=str(contoured_img), file_path=str("uploads/"+contoured_img))
 
 
 if __name__ == '__main__':

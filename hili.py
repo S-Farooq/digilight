@@ -66,7 +66,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 def contour_img(img_path):
-    cropped_hili_img = "static/testimg.jpg"
+    cropped_hili_img = "static/uploads/testimg.jpg"
     image = cv2.imread(img_path)
 
     # rgb to HSV color spave conversion
@@ -95,7 +95,7 @@ def contour_img(img_path):
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
     cv2.imwrite(cropped_hili_img, imgray)
-    return str(cropped_hili_img)
+    return "testimg.jpg"
     
 
 def google_ocr_img(img_path):
