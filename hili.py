@@ -1,7 +1,8 @@
 import sys
 
 sys.path.append('/usr/local/lib/python2.7/site-packages')
-    
+sys.path.append('/lib/x86_64-linux-gnu')
+sys.path.append('/')    
 import json, base64, binascii,hashlib
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
