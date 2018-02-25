@@ -65,12 +65,12 @@
                   
       </div>
       <div class="row">
-         <form method="POST" enctype="multipart/form-data">
+         <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
           <div class="col-md-6">
-              <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images();" multiple/>
+              <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
           </div>
           <div class="col-md-6">
-              <input type="submit" class="btn btn-primary" name='submit_image' value="Upload Multiple Image"/>
+              <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
           </div>
          </form>
          </div>

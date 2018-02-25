@@ -14,6 +14,11 @@ import urllib, difflib
 
 
 
+
+
+from flask import Flask, render_template, request
+from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
+
 app = Flask(__name__)
 with open('/var/www/Digilight/digilight/config.json') as json_data_file:
     data = json.load(json_data_file)
@@ -21,6 +26,12 @@ app.secret_key = data['secret_key']
 #  Client Keys
 CLIENT_ID = data['client_id']
 CLIENT_SECRET = data['client_secret']
+
+photos = UploadSet('photos', IMAGES)
+
+app.config['UPLOADED_PHOTOS_DEST'] = 'static/upload_img'
+configure_uploads(app, photos)
+
 
 def get_mrkup_from_df(reco_df,to_display_amount=10):
     reco_mrkup = ["""<table class="table table-hover"><thead><tr>
@@ -46,10 +57,13 @@ def my_form():
     session.clear()
     return render_template('index.html')
 
-@app.route('/', methods=['POST', 'GET'])
-def main():
-    output_print = str(request.form['submit_image']) 
-    return render_template("index.html", output_print=output_print)
+@app.route('/', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST' and 'images' in request.files:
+        filename = photos.save(request.files['images'])
+        return filename
+    return render_template("index.html", output_print=str(request.files['photo']))
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
