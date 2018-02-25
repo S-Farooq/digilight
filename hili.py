@@ -66,7 +66,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 def contour_img(img_path):
-    cropped_hili_img = img_path
+    cropped_hili_img = "static/testimg.jpg"
     image = cv2.imread(img_path)
 
     # rgb to HSV color spave conversion
