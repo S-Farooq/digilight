@@ -94,11 +94,13 @@ def contour_img(img_path):
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-    return str(cropped_hili_img)
     cv2.imwrite(cropped_hili_img, imgray)
+    return str(cropped_hili_img)
     
+
 def google_ocr_img(img_path):
     data = convert_img_to_json([img_path+" 7:5"])
+    return str(data)
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=data,
         headers={'Content-Type': 'application/json'})
