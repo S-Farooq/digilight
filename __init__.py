@@ -29,7 +29,7 @@ CLIENT_SECRET = data['client_secret']
 
 photos = UploadSet('photos', IMAGES)
 
-UPLOAD_FOLDER = '/var/www/Digilight/digilight/uploads/'
+UPLOAD_FOLDER = '/var/www/Digilight/digilight/static/uploads/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -67,10 +67,10 @@ def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
         contoured_img = hili.contour_img(UPLOAD_FOLDER+filename)
-        op = hili.google_ocr_img(contoured_img)
+        # op = hili.google_ocr_img(contoured_img)
         # ocr_text = hili.create_note_from_highlight(UPLOAD_FOLDER+filename)
         # return filename
-    return render_template("index.html", output_print=str(op), file_path=str(UPLOAD_FOLDER+filename))
+    return render_template("index.html", output_print=str(contoured_img), file_path=str("uploads/"+filename))
 
 
 if __name__ == '__main__':

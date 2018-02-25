@@ -85,7 +85,8 @@
                <div class="row" id="image_preview"></div>
                 <h4>{{ file_path }}</h4>
                  <h5>{{ output_print }}</h5>
-                 <div class='col-md-8'><img class='img-responsive' src='{{ file_path }}'></div>
+                 <div class='col-md-8'><img class='img-responsive' src="
+                 {{ url_for('static', filename='{{ file_path }}') }}"></div>
 
         </div>
     </section>
