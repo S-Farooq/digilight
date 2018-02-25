@@ -62,7 +62,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 
-def google_ocr_img(img_path)
+def google_ocr_img(img_path):
     cropped_hili_img = "color-contour-crop.jpg"
     image = cv2.imread(img_path)
 

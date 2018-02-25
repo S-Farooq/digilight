@@ -5,7 +5,7 @@ import requests
 import cv2
 import numpy as np
 
-def convert_img_to_json(input_file, output_filename):
+def convert_img_to_json(input_file):
     """Translates the input file into a json output file.
 
     Args:
@@ -34,8 +34,7 @@ def convert_img_to_json(input_file, output_filename):
             'image': content_json_obj,
         })
 
-    with open(output_filename, 'w') as output_file:
-        json.dump({'requests': request_list}, output_file)
+    return {'requests': request_list}
 
 
 DETECTION_TYPES = [
@@ -59,51 +58,43 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 
-cropped_hili_img = "color-contour-crop.jpg"
-image = cv2.imread("sample_images/highlight-sample.jpg")
+def google_ocr_img(img_path):
+    cropped_hili_img = "color-contour-crop.jpg"
+    image = cv2.imread(img_path)
 
-# rgb to HSV color spave conversion
-hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # rgb to HSV color spave conversion
+    hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
+    HSV_lower = np.array([22, 50, 50], np.uint8)  # Lower HSV value
+    HSV_upper = np.array([30, 250, 250], np.uint8)  # Upper HSV value
 
-HSV_lower = np.array([22, 50, 50], np.uint8)  # Lower HSV value
-HSV_upper = np.array([30, 250, 250], np.uint8)  # Upper HSV value
+    frame_threshed = cv2.inRange(hsv_img, HSV_lower, HSV_upper)
+    cv2.imwrite("color-thresh.jpg",frame_threshed)
+    # find connected components
+    _, contours, hierarchy, = cv2.findContours(frame_threshed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-frame_threshed = cv2.inRange(hsv_img, HSV_lower, HSV_upper)
-cv2.imwrite("color-thresh.jpg",frame_threshed)
-# find connected components
-_, contours, hierarchy, = cv2.findContours(frame_threshed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    # Draw contours around filtered objects
+    thresh = 100  # Noise removal threshold
+    OutputImg = image.copy()
+    max_thresh = max([len(x) for x in contours])
+    mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise
+    out = np.zeros_like(image)  # Extract out the object and place into output image
 
-# Draw contours around filtered objects
-thresh = 100  # Noise removal threshold
-OutputImg = image.copy()
-max_thresh = max([len(x) for x in contours])
-mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise
-out = np.zeros_like(image)  # Extract out the object and place into output image
+    for cnt in contours:
+        # remove noise objects having contour length threshold value
+        if len(cnt) > thresh:
+            cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
+            cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
 
-for cnt in contours:
-    # remove noise objects having contour length threshold value
-    if len(cnt) > thresh:
-        cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
-        cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
+    out[mask == 255] = image[mask == 255]
+    imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite(cropped_hili_img, imgray)
 
-out[mask == 255] = image[mask == 255]
-imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-cv2.imwrite(cropped_hili_img, imgray)
+    data = convert_img_to_json([cropped_hili_img+" 7:10"])
+    response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
+        data=data,
+        headers={'Content-Type': 'application/json'})
 
-# cv2.imshow('Object detection', OutputImg)
-cv2.imwrite("color-thresh-result.jpg",OutputImg)
-
-output_filename='jsons/api_calls.json'
-convert_img_to_json([cropped_hili_img+" 7:10"], output_filename)
-
-data = open(output_filename, 'rb').read()
-response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
-    data=data,
-    headers={'Content-Type': 'application/json'})
-
-
-api_result = response.json()
-print api_result
-with open("jsons/api_result.json", 'w') as output_file:
-    json.dump(api_result, output_file)
+    api_result = response.json()
+    return api_result
+    
