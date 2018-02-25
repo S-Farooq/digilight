@@ -67,7 +67,7 @@ def get_detection_type(detect_num):
 
 
 def google_ocr_img(img_path):
-    cropped_hili_img = "color-contour-crop.jpg"
+    cropped_hili_img = img_path
     image = cv2.imread(img_path)
 
     # rgb to HSV color spave conversion
@@ -77,7 +77,6 @@ def google_ocr_img(img_path):
     HSV_upper = np.array([30, 250, 250], np.uint8)  # Upper HSV value
 
     frame_threshed = cv2.inRange(hsv_img, HSV_lower, HSV_upper)
-    cv2.imwrite("color-thresh.jpg",frame_threshed)
     # find connected components
     _, contours, hierarchy, = cv2.findContours(frame_threshed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
@@ -96,6 +95,7 @@ def google_ocr_img(img_path):
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
+    return str(cropped_hili_img)
     cv2.imwrite(cropped_hili_img, imgray)
 
     data = convert_img_to_json([cropped_hili_img+" 7:5"])

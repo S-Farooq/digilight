@@ -66,9 +66,11 @@ def my_form():
 def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
-        ocr_text = hili.create_note_from_highlight(UPLOAD_FOLDER+filename)
+        contoured_img = hili.contour_img(UPLOAD_FOLDER+filename)
+        # hili.google_ocr_img(img_path)
+        # ocr_text = hili.create_note_from_highlight(UPLOAD_FOLDER+filename)
         # return filename
-    return render_template("index.html", output_print=str(ocr_text), file_path=str(UPLOAD_FOLDER+image_file))
+    return render_template("index.html", output_print=str(contoured_img), file_path=str(UPLOAD_FOLDER+image_file))
 
 
 if __name__ == '__main__':
