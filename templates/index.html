@@ -62,10 +62,7 @@
       <div class="container">
         <div class="intro-text">
           <div class="intro-lead-in">Digilight your Highlights.</div>
-          <input id="multi_file_upload" type="file" onchange="previewFile()"><br>
-              <img src="" height="400" alt="Image preview...">
-          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Digilight</a>
-        </div>
+          <p>{{ output_print }}</p>          
       </div>
     </header>
 
@@ -74,12 +71,16 @@
       <div class="container">
         
         <div class="row">
-        
-          <div class="col-lg-12 text-center">
-            
+         <form action="multiupload.php" method="post" enctype="multipart/form-data">
+          <div class="col-md-6">
+              <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images();" multiple/>
           </div>
-        
-        </div>
+          <div class="col-md-6">
+              <input type="submit" class="btn btn-primary" name='submit_image' value="Upload Multiple Image"/>
+          </div>
+         </form>
+         </div>
+         <div class="row" id="image_preview"></div>
         
       </div>
     </section>
@@ -91,7 +92,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <span class="copyright">Copyright &copy; Your Website 2018</span>
+            <span class="copyright">Copyright &copy; Shaham.me 2018</span>
           </div>
           <div class="col-md-4">
             <ul class="list-inline social-buttons">
@@ -102,12 +103,7 @@
               </li>
               <li class="list-inline-item">
                 <a href="#">
-                  <i class="fa fa-facebook"></i>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#">
-                  <i class="fa fa-linkedin"></i>
+                  <i class="fa fa-user"></i>
                 </a>
               </li>
             </ul>
@@ -143,23 +139,14 @@
     <script src="{{ url_for('static', filename='js/agency.min.js') }}"></script>
 
     <script>
-       function previewFile(){
-           var preview = document.querySelector('img'); //selects the query named img
-           var file    = document.querySelector('input[type=file]').files[0]; //sames as here
-           var reader  = new FileReader();
-
-           reader.onloadend = function () {
-               preview.src = reader.result;
-           }
-
-           if (file) {
-               reader.readAsDataURL(file); //reads the data as a URL
-           } else {
-               preview.src = "";
-           }
-      }
-
-      previewFile();  //calls the function named previewFile()
+       function preview_images() 
+        {
+         var total_file=document.getElementById("images").files.length;
+         for(var i=0;i<total_file;i++)
+         {
+          $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"'></div>");
+         }
+        }
   </script>
 
   </body>

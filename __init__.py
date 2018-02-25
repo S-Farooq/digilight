@@ -48,7 +48,8 @@ def my_form():
 
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    return render_template("index.html")
+    ouput_print = str(request.form) 
+    return render_template("index.html", output_print=output_print)
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
