@@ -75,7 +75,7 @@ def upload():
         msg=''
         msg, ocr_texts = hili.create_note_from_highlight(UPLOAD_PATH+contoured_img)
         # return filename
-    return render_template("index.html", output_print="<br><br>".join(ocr_text), file_path=str(UPLOAD_FOLDER+contoured_img))
+    return render_template("index.html", output_print="<br><br>".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img))
 
 
 if __name__ == '__main__':
