@@ -60,27 +60,25 @@
 
     <!-- Header -->
     <header class="masthead">
-      <div class="container">
+      <div class="container text-center">
         <div class="intro-text">
           <div class="intro-lead-in">Digitize your Highlights.</div>
-        </div>
-      </div>
-
-      <div class="container text-center">
+          <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
           <div class="row">
-             <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+             
               <div class="col-md-6">
                   <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
               </div>
               <div class="col-md-6">
-                  <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
+                  <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/>
               </div>
 
-             </form>
              </div>
-
-             
+             </form>
         </div>
+      </div>
+
+      
       
     </header>
 
