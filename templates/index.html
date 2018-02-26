@@ -195,7 +195,12 @@
          {
           $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' style='width: 200px; height: 150px;' src='"+URL.createObjectURL(event.target.files[i])+"'></div>");
          }
-        }
+        };
+
+        $('#my-imageupload').imageupload({
+            allowedFormats: [ 'jpg', 'png', 'jpeg' ],
+            maxFileSizeKb: 16000
+        });
   </script>
 
   </body>
