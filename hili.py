@@ -101,7 +101,7 @@ def contour_img(img_path):
     j = Image.fromarray(imgray)
     
     j.save(main_path+"static/uploads/"+cropped_hili_img)
-    cv2.imwrite(main_path+"static/uploads/cv"+cropped_hili_img, imgray)
+    # cv2.imwrite(main_path+"static/uploads/cv"+cropped_hili_img, imgray)
     return cropped_hili_img
     
 
@@ -110,11 +110,11 @@ def google_ocr_img(img_path):
     useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
 
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
-        data=data,
+        data=json.dumps(data),
         headers={'Content-Type': 'application/json'})
     api_result = response.json()
-    return img_path+str(data), str(api_result)
-    return api_result, get_all_text(res_data) 
+    
+    return api_result, get_all_text(api_result) 
     
 
 def create_en_resource(filename):
