@@ -216,9 +216,10 @@ def create_note_from_highlight(image_file):
 
     try:
         resources = create_en_resource(image_file)
-        note = makeNote(dev_token, noteStore, "Test-HILI", "\n\n".join(all_texts),
+        note = makeNote(dev_token, noteStore, "Test-HILI", all_texts,
                  parentNotebook=parentNotebook, resources=resources)
+        msg = note.title + " created in " + parentNotebook + "!"
     except:
-        return "ERROR: Couldnt make evernote out of " + "\n\n".join(all_texts)  
-          
-    return note.title + " created in " + parentNotebook + "!"
+        return "ERROR: Couldnt make evernote.", all_texts
+
+    return msg, all_texts
