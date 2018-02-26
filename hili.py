@@ -14,6 +14,9 @@ from PIL import Image
 import cv2
 import numpy as np
 
+import os 
+main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
+
 def convert_img_to_json(input_file):
     """Translates the input file into a json output file.
 
@@ -67,7 +70,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 def contour_img(img_path):
-    cropped_hili_img = "static/uploads/testimg.png"
+    cropped_hili_img = "contoured_"+os.path.basename(img_path)
     image = cv2.imread(img_path)
 
     # rgb to HSV color spave conversion
@@ -96,11 +99,10 @@ def contour_img(img_path):
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
     j = Image.fromarray(imgray)
-    import os 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    j.save(dir_path+"/"+cropped_hili_img)
+    
+    j.save(main_path+"static/uploads/"+cropped_hili_img)
     # cv2.imwrite(cropped_hili_img, imgray)
-    return "testimg.jpg"
+    return cropped_hili_img
     
 
 def google_ocr_img(img_path):

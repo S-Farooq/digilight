@@ -19,6 +19,9 @@ import hili as hili
 from flask import Flask, render_template, request
 from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
 
+def root_dir():  # pragma: no cover
+    return os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
 with open('/var/www/Digilight/digilight/config.json') as json_data_file:
     data = json.load(json_data_file)
@@ -29,7 +32,8 @@ CLIENT_SECRET = data['client_secret']
 
 photos = UploadSet('photos', IMAGES)
 
-UPLOAD_FOLDER = '/var/www/Digilight/digilight/static/uploads/'
+UPLOAD_FOLDER = 'uploads/'
+UPLOAD_PATH = '/var/www/Digilight/digilight/static/'+UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -66,11 +70,11 @@ def my_form():
 def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
-        contoured_img = hili.contour_img(UPLOAD_FOLDER+filename)
+        contoured_img = hili.contour_img(UPLOAD_PATH+filename)
         # op = hili.google_ocr_img(contoured_img)
         # ocr_text = hili.create_note_from_highlight(UPLOAD_FOLDER+filename)
         # return filename
-    return render_template("index.html", output_print=str("uploads/"+contoured_img), file_path=str("uploads/"+contoured_img))
+    return render_template("index.html", output_print='Contoured Image:', file_path=str(UPLOAD_FOLDER+contoured_img))
 
 
 if __name__ == '__main__':
