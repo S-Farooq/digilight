@@ -111,7 +111,8 @@ def google_ocr_img(img_path):
 
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=json.dumps(data),
-        headers={'Content-Type': 'application/json'})
+        headers={'Content-Type': 'application/json',
+                'User-Agent': useragent})
     api_result = response.json()
     all_texts = get_all_text(api_result) 
     return api_result, "<br>".join(all_texts)
