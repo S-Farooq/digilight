@@ -70,7 +70,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 
-def contour_img(img_path,thresh=400,std_dev=2):
+def contour_img(img_path,thresh=400,std_dev=3.5):
     """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
     contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
