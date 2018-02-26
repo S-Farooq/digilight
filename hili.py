@@ -69,7 +69,8 @@ def get_detection_type(detect_num):
     else:
         return DETECTION_TYPES[0]
 
-def contour_img(img_path,thresh=400):
+
+def contour_img(img_path,thresh=400,std_dev=2):
     """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
     contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
@@ -86,15 +87,27 @@ def contour_img(img_path,thresh=400):
 
     # Draw contours around filtered objects
     OutputImg = image.copy()
-    max_thresh = max([len(x) for x in contours])
+    cnt_lens = [len(x) for x in contours]
+
+    klist = cnt_lens
+    avglatlist = range(0,len(cnt_lens))
+
+    klist_np = np.array(klist).astype(np.float)
+    avglatlist_np = np.array(avglatlist).astype(np.float)    
+
+    # klist_filtered = klist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
+    avglatlist_filtered = avglatlist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
+
+    max_thresh = max(cnt_lens)
     mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise
     out = np.zeros_like(image)  # Extract out the object and place into output image
 
-    for cnt in contours:
-        # remove noise objects having contour length threshold value
-        if len(cnt) > thresh:
-            cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
-            cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
+    for c in avglatlist_filtered:
+        # # remove noise objects having contour length threshold value
+        # if contours[c] > thresh:
+        cnt = contours[c]
+        cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
+        cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
