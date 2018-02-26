@@ -113,7 +113,7 @@ def google_ocr_img(img_path):
         data=data,
         headers={'Content-Type': 'application/json',
         'User-Agent': useragent})
-    return str(data), str(response)
+    return str(data), str(json.loads(response))
     api_result = response.json()
     return api_result, get_all_text(api_result) 
     
