@@ -114,7 +114,7 @@ def google_ocr_img(img_path):
         headers={'Content-Type': 'application/json'})
     api_result = response.json()
     all_texts = get_all_text(api_result) 
-    return api_result, "\n\n".join(all_texts)
+    return api_result, "<br>".join(all_texts)
     
 
 def create_en_resource(filename):
