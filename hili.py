@@ -70,7 +70,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 def contour_img(img_path):
-    cropped_hili_img = "contoured_"+os.path.basename(img_path)
+    cropped_hili_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
 
     # rgb to HSV color spave conversion
@@ -111,8 +111,7 @@ def google_ocr_img(img_path):
 
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=data,
-        headers={'Content-Type': 'application/json',
-        'User-Agent': useragent})
+        headers={'Content-Type': 'application/json'})
     api_result = response.json()
     return img_path+str(data), str(api_result)
     return api_result, get_all_text(res_data) 
