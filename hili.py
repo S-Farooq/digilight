@@ -110,7 +110,7 @@ def google_ocr_img(img_path):
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=data,
         headers={'Content-Type': 'application/json'})
-
+    return str(data), response.text()
     api_result = response.json()
     return api_result, get_all_text(api_result) 
     
