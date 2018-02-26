@@ -59,19 +59,15 @@
     </nav>
 
     <!-- Header -->
-   <!--  <header class="masthead">
+    <header class="masthead">
       <div class="container">
         <div class="intro-text">
           <div class="intro-lead-in">Digitize your Highlights.</div>
         </div>
       </div>
-      
-    </header> -->
 
-    <!-- Services -->
-    <section id="services">
       <div class="container text-center">
-          <!-- <div class="row">
+          <div class="row">
              <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
               <div class="col-md-6">
                   <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
@@ -81,48 +77,21 @@
               </div>
 
              </form>
-             </div> -->
+             </div>
 
-             <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-             <div class="imageupload panel panel-default">
-                  <div class="panel-heading clearfix">
-                      <h3 class="panel-title pull-left">Upload Your Highlights</h3>
-                      <div class="btn-group pull-right">
-                          <button type="button" class="btn btn-default active">File</button>
-                          <button type="button" class="btn btn-default">URL</button>
-                      </div>
-                  </div>
-                  <div class="file-tab panel-body">
-                      <label class="btn btn-default btn-file">
-                          <span>Browse</span>
-                          <!-- The file is stored here. -->
-                          <input type="file" name="images">
-                      </label>
-                      <button type="button" class="btn btn-default">Remove</button>
-                  </div>
-                  <div class="url-tab panel-body">
-                      <div class="input-group">
-                          <input type="text" class="form-control" placeholder="Image URL">
-                          <div class="input-group-btn">
-                              <button type="button" class="btn btn-default">Submit</button>
-                          </div>
-                      </div>
-                      <button type="button" class="btn btn-default">Remove</button>
-                      <!-- The URL is stored here. -->
-                      <input type="hidden" name="image-url">
-                  </div>
-              </div>
-              <div class="col-md-12">
-                  <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/>
-              </div>
-              </form>
              
         </div>
+      
+    </header>
+
+    <!-- Services -->
+    <section id="services">
+      
       <div class="container">
             <div class="row">
             <h5>{{ output_print }}</h5>
             </div>
-               <div class="row" id="image_preview" >
+               <div class="row" id="image_preview" style="display:hidden;" >
                  
                  <div class='col-md-offset-2 col-md-8'>
                  <img class='img-responsive' style="width: 200px; height: 150px;" src="
@@ -195,6 +164,7 @@
          for(var i=0;i<total_file;i++)
          {
           $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' style='width: 200px; height: 150px;' src='"+URL.createObjectURL(event.target.files[i])+"'></div>");
+          $('#image_preview').show()
          }
         };
 
