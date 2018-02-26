@@ -70,7 +70,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 
-def contour_img(img_path,thresh=400,std_dev=5):
+def contour_img(img_path,thresh=400,std_dev=7):
     """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
     contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
@@ -107,10 +107,10 @@ def contour_img(img_path,thresh=400,std_dev=5):
 
     for c in avglatlist_filtered:
         # # remove noise objects having contour length threshold value
-        # if contours[c] > thresh:
         cnt = contours[int(c)]
-        cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
-        cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
+        if len(cnt) > thresh:
+            cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
+            cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
