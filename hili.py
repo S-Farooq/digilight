@@ -113,9 +113,10 @@ def google_ocr_img(img_path):
         data=data,
         headers={'Content-Type': 'application/json',
         'User-Agent': useragent})
-    return str(data), str(json.loads(response))
     api_result = response.json()
-    return api_result, get_all_text(api_result) 
+    res_data = json.loads(api_result)
+    return str(data), response.json()
+    return api_result, get_all_text(res_data) 
     
 
 def create_en_resource(filename):
