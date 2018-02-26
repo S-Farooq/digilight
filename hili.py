@@ -107,10 +107,13 @@ def contour_img(img_path):
 
 def google_ocr_img(img_path):
     data = convert_img_to_json([img_path+" 7:5"])
+    useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
+
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=data,
-        headers={'Content-Type': 'application/json'})
-    return str(data), response.text()
+        headers={'Content-Type': 'application/json',
+        'User-Agent': useragent})
+    return str(data), str(response)
     api_result = response.json()
     return api_result, get_all_text(api_result) 
     
