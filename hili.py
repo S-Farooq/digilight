@@ -70,7 +70,7 @@ def get_detection_type(detect_num):
         return DETECTION_TYPES[0]
 
 
-def contour_img(img_path,thresh=400,std_dev=3.5):
+def contour_img(img_path,thresh=400,std_dev=5):
     """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
     contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
@@ -97,6 +97,9 @@ def contour_img(img_path,thresh=400,std_dev=3.5):
 
     # klist_filtered = klist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
     avglatlist_filtered = avglatlist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
+    while len(avglatlist_filtered)==0:
+        std_dev=std_dev-0.5
+        avglatlist_filtered = avglatlist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
 
     max_thresh = max(cnt_lens)
     mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise
