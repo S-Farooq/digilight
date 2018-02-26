@@ -66,10 +66,10 @@
           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
           <div class="row">
              
-              <div class="col-md-6">
-                  <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
+              <div class="col-md-8">
+                  <input type="file" class="form-control" id="images" name="images" onchange="" multiple/>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                   <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/>
               </div>
 
@@ -85,17 +85,19 @@
     <!-- Services -->
     <section id="services">
       
-      <div class="container">
+      <div class="container text-center">
             <div class="row">
             <h5>{{ output_print }}</h5>
             </div>
-               <div class="row" id="image_preview" style="display:hidden;" >
-                 
-                 <div class='col-md-offset-2 col-md-8'>
-                 <img class='img-responsive' style="width: 200px; height: 150px;" src="
-                 {{ url_for('static', filename=file_path) }}">
-                 </div>
+               <!-- <div class="row" id="image_preview" style="display:hidden;" >
+                 </div> -->
+            <div class="row">
+               <div class='col-md-12'>
+               <img class='img-responsive' style="width: auto; height: auto;" src="
+               {{ url_for('static', filename=file_path) }}">
                </div>
+             </div>
+               
 
         </div>
     </section>
