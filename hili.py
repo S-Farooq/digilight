@@ -84,7 +84,7 @@ def contour_img(img_path):
     _, contours, hierarchy, = cv2.findContours(frame_threshed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
     # Draw contours around filtered objects
-    thresh = 100  # Noise removal threshold
+    thresh = 400  # Noise removal threshold
     OutputImg = image.copy()
     max_thresh = max([len(x) for x in contours])
     mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise
