@@ -94,7 +94,9 @@ def contour_img(img_path):
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite(cropped_hili_img, imgray)
+    j = Image.fromarray(imgray)
+    j.save(cropped_hili_img)
+    # cv2.imwrite(cropped_hili_img, imgray)
     return "testimg.jpg"
     
 
