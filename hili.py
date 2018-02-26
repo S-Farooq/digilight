@@ -113,8 +113,8 @@ def google_ocr_img(img_path):
         data=json.dumps(data),
         headers={'Content-Type': 'application/json'})
     api_result = response.json()
-    
-    return api_result, get_all_text(api_result) 
+    all_texts = get_all_text(api_result) 
+    return api_result, "\n\n".join(all_texts)
     
 
 def create_en_resource(filename):
@@ -216,9 +216,9 @@ def create_note_from_highlight(image_file):
 
     try:
         resources = create_en_resource(image_file)
-        makeNote(dev_token, noteStore, "Test-HILI", "\n\n".join(all_texts),
+        note = makeNote(dev_token, noteStore, "Test-HILI", "\n\n".join(all_texts),
                  parentNotebook=parentNotebook, resources=resources)
     except:
         return "ERROR: Couldnt make evernote out of " + "\n\n".join(all_texts)  
           
-    return "\n\n".join(all_texts)
+    return note.title + " created in " + parentNotebook + "!"
