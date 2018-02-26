@@ -23,7 +23,6 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/agency.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/jasny-bootstrap.min.css') }}" rel="stylesheet">
 
   </head>
 
@@ -67,7 +66,7 @@
         </div>
       </div>
       <div class="container text-center">
-        <div class="row">
+        <!-- <div class="row">
            <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
             <div class="col-md-6">
                 <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
@@ -77,22 +76,42 @@
             </div>
 
            </form>
-           </div>
+           </div> -->
 
-           <div class="row">
            <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-            <div class="fileupload fileupload-new" data-provides="fileupload">
-                <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-                <div>
-                  <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="images" /></span>
-                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+           <div class="imageupload panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Upload Image</h3>
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-default active">File</button>
+                        <button type="button" class="btn btn-default">URL</button>
+                    </div>
                 </div>
-              </div>
-            <div class="col-md-12">
-                <input type="submit" class="btn btn-primary" name='submitbtn' value="Digilight it."/>
+                <div class="file-tab panel-body">
+                    <label class="btn btn-default btn-file">
+                        <span>Browse</span>
+                        <!-- The file is stored here. -->
+                        <input type="file" name="images">
+                    </label>
+                    <button type="button" class="btn btn-default">Remove</button>
+                </div>
+                <div class="url-tab panel-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Image URL">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default">Submit</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-default">Remove</button>
+                    <!-- The URL is stored here. -->
+                    <input type="hidden" name="image-url">
+                </div>
             </div>
-           </form>
-           </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/>
+            </div>
+            </form>
+           
       </div>
     </header>
 
@@ -166,7 +185,7 @@
 
     <!-- Custom scripts for this template -->
     <script src="{{ url_for('static', filename='js/agency.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jasny-bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/imgupload.js') }}"></script>
 
     <script>
        function preview_images() 
