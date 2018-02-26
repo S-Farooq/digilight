@@ -101,7 +101,7 @@ def contour_img(img_path):
     j = Image.fromarray(imgray)
     
     j.save(main_path+"static/uploads/"+cropped_hili_img)
-    # cv2.imwrite(cropped_hili_img, imgray)
+    cv2.imwrite(main_path+"static/uploads/cv"+cropped_hili_img, imgray)
     return cropped_hili_img
     
 
