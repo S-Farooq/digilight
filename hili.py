@@ -105,7 +105,7 @@ def contour_img(img_path,thresh=400,std_dev=2):
     for c in avglatlist_filtered:
         # # remove noise objects having contour length threshold value
         # if contours[c] > thresh:
-        cnt = contours[c]
+        cnt = contours[int(c)]
         cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
         cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
 
