@@ -13,6 +13,7 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
+
     <!-- Custom fonts for this template -->
     <link href="{{ url_for('static', filename='vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -61,8 +62,8 @@
     <header class="masthead">
       <div class="container">
         <div class="intro-text">
-          <div class="intro-lead-in">Digilight your Highlights.</div>
-                  
+          <div class="intro-lead-in">Digitize your Highlights.</div>
+        </div>
       
       <div class="row">
          <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
@@ -72,9 +73,22 @@
           <div class="col-md-6">
               <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
           </div>
+
          </form>
          </div>
-      </div>
+
+         <div class="row">
+         <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+          <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="images"></span>
+            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+          </div>
+          <div class="col-md-12">
+              <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
+          </div>
+         </form>
+         </div>
       </div>
     </header>
 
@@ -82,7 +96,7 @@
     <section id="services">
       <div class="container">
         
-               <div class="row" id="image_preview"></div>
+               <div class="row" id="image_preview" height='200' width='100'></div>
                  <h5>{{ output_print }}</h5>
                  <div class='col-md-8'><img class='img-responsive' src="
                  {{ url_for('static', filename=file_path) }}"></div>
@@ -137,11 +151,13 @@
     <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
     <!-- Contact form JavaScript -->
-    <script src="{{ url_for('static', filename='js/jqBootstrapValidation.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/contact_me.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/jqBootstrapValidation.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/contact_me.js') }}"></script> -->
+
 
     <!-- Custom scripts for this template -->
     <script src="{{ url_for('static', filename='js/agency.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jasny-bootstrap.js') }}"></script>
 
     <script>
        function preview_images() 

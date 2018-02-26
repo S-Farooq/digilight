@@ -17,6 +17,17 @@ import numpy as np
 import os 
 main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
 
+DETECTION_TYPES = [
+    'TYPE_UNSPECIFIED',
+    'FACE_DETECTION',
+    'LANDMARK_DETECTION',
+    'LOGO_DETECTION',
+    'LABEL_DETECTION',
+    'TEXT_DETECTION',
+    'SAFE_SEARCH_DETECTION',
+    'DOCUMENT_TEXT_DETECTION'
+]
+
 def convert_img_to_json(input_file):
     """Translates the input file into a json output file.
 
@@ -49,17 +60,6 @@ def convert_img_to_json(input_file):
     return {'requests': request_list}
 
 
-DETECTION_TYPES = [
-    'TYPE_UNSPECIFIED',
-    'FACE_DETECTION',
-    'LANDMARK_DETECTION',
-    'LOGO_DETECTION',
-    'LABEL_DETECTION',
-    'TEXT_DETECTION',
-    'SAFE_SEARCH_DETECTION',
-    'DOCUMENT_TEXT_DETECTION'
-]
-
 
 def get_detection_type(detect_num):
     """Return the Vision API symbol corresponding to the given number."""
@@ -69,8 +69,9 @@ def get_detection_type(detect_num):
     else:
         return DETECTION_TYPES[0]
 
-def contour_img(img_path):
-    cropped_hili_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
+def contour_img(img_path,thresh=400):
+    """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
+    contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
 
     # rgb to HSV color spave conversion
@@ -84,7 +85,6 @@ def contour_img(img_path):
     _, contours, hierarchy, = cv2.findContours(frame_threshed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
     # Draw contours around filtered objects
-    thresh = 400  # Noise removal threshold
     OutputImg = image.copy()
     max_thresh = max([len(x) for x in contours])
     mask = np.zeros_like(image)  # Create mask where white is what we want, black otherwise
@@ -98,14 +98,16 @@ def contour_img(img_path):
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-    j = Image.fromarray(imgray)
     
-    j.save(main_path+"static/uploads/"+cropped_hili_img)
-    # cv2.imwrite(main_path+"static/uploads/cv"+cropped_hili_img, imgray)
-    return cropped_hili_img
+    #save contoured image to display
+    j = Image.fromarray(imgray)
+    j.save(main_path+"static/uploads/"+contoured_img)
+
+    return contoured_img
     
 
 def google_ocr_img(img_path):
+    """Sends DOCUMENT_TEXT_DETECTION API request with img file as content and return OCR result"""
     data = convert_img_to_json([img_path+" 7:5"])
     useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
 
@@ -189,7 +191,7 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
     return note
 
 def get_all_text(gcloud_data):
-    # print gcloud_data
+    # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
     all_texts = []
     for textAnnotations in gcloud_data['responses']:
         all_texts.append(textAnnotations['fullTextAnnotation']['text'].encode('ascii','ignore'))
