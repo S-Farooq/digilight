@@ -36,9 +36,9 @@ UPLOAD_FOLDER = 'uploads/'
 UPLOAD_PATH = '/var/www/Digilight/digilight/static/'+UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_PATH
 
-app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_FOLDER
+app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_PATH
 configure_uploads(app, photos)
 
 
