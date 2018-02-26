@@ -64,7 +64,7 @@ def get_mrkup_from_df(reco_df,to_display_amount=10):
 @app.route('/')
 def my_form():
     session.clear()
-    return render_template('index.html')
+    return render_template('index.html',output_print="The OCR Text appears here.")
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():

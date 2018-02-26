@@ -79,13 +79,15 @@
 
          <div class="row">
          <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-          <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-            <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-            <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="images"></span>
-            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-          </div>
+          <div class="fileupload fileupload-new" data-provides="fileupload">
+              <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
+              <div>
+                <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="images" /></span>
+                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+              </div>
+            </div>
           <div class="col-md-12">
-              <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
+              <input type="submit" class="btn btn-primary" name='submitbtn' value="Digilight it."/>
           </div>
          </form>
          </div>
@@ -95,11 +97,16 @@
     <!-- Services -->
     <section id="services">
       <div class="container">
-        
-               <div class="row" id="image_preview" height='200' width='100'></div>
-                 <h5>{{ output_print }}</h5>
-                 <div class='col-md-8'><img class='img-responsive' src="
-                 {{ url_for('static', filename=file_path) }}"></div>
+            <div class="row">
+            <h5>{{ output_print }}</h5>
+            </div>
+               <div class="row" id="image_preview" >
+                 
+                 <div class='col-md-offset-2 col-md-8'>
+                 <img class='img-responsive' style="width: 200px; height: 150px;" src="
+                 {{ url_for('static', filename=file_path) }}">
+                 </div>
+               </div>
 
         </div>
     </section>
@@ -165,7 +172,7 @@
          var total_file=document.getElementById("images").files.length;
          for(var i=0;i<total_file;i++)
          {
-          $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"'></div>");
+          $('#image_preview').append("<div class='col-md-3'><img class='img-responsive' style='width: 200px; height: 150px;' src='"+URL.createObjectURL(event.target.files[i])+"'></div>");
          }
         }
   </script>
