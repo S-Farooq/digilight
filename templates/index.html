@@ -23,6 +23,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/agency.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/jasny-bootstrap.min.css') }}" rel="stylesheet">
 
   </head>
 
@@ -64,33 +65,34 @@
         <div class="intro-text">
           <div class="intro-lead-in">Digitize your Highlights.</div>
         </div>
-      
-      <div class="row">
-         <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-          <div class="col-md-6">
-              <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
-          </div>
-          <div class="col-md-6">
-              <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
-          </div>
-
-         </form>
-         </div>
-
-         <div class="row">
-         <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-          <div class="fileupload fileupload-new" data-provides="fileupload">
-              <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-              <div>
-                <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="images" /></span>
-                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-              </div>
+      </div>
+      <div class="container text-center">
+        <div class="row">
+           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+            <div class="col-md-6">
+                <input type="file" class="form-control" id="images" name="images" onchange="preview_images();" multiple/>
             </div>
-          <div class="col-md-12">
-              <input type="submit" class="btn btn-primary" name='submitbtn' value="Digilight it."/>
-          </div>
-         </form>
-         </div>
+            <div class="col-md-6">
+                <input type="submit" class="btn btn-primary" name='submitbtn' value="Upload Multiple Image"/>
+            </div>
+
+           </form>
+           </div>
+
+           <div class="row">
+           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+            <div class="fileupload fileupload-new" data-provides="fileupload">
+                <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
+                <div>
+                  <span class="btn btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="images" /></span>
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                </div>
+              </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-primary" name='submitbtn' value="Digilight it."/>
+            </div>
+           </form>
+           </div>
       </div>
     </header>
 
