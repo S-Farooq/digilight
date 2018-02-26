@@ -71,10 +71,10 @@ def upload():
     if request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
         contoured_img = hili.contour_img(UPLOAD_PATH+filename)
-        # op = hili.google_ocr_img(contoured_img)
+        api_res, ocr_text = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
         # ocr_text = hili.create_note_from_highlight(UPLOAD_FOLDER+filename)
         # return filename
-    return render_template("index.html", output_print='Contoured Image:', file_path=str(UPLOAD_FOLDER+contoured_img))
+    return render_template("index.html", output_print=str(ocr_text), file_path=str(UPLOAD_FOLDER+contoured_img))
 
 
 if __name__ == '__main__':

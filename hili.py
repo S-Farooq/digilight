@@ -107,13 +107,12 @@ def contour_img(img_path):
 
 def google_ocr_img(img_path):
     data = convert_img_to_json([img_path+" 7:5"])
-    return str(data)
     response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
         data=data,
         headers={'Content-Type': 'application/json'})
 
     api_result = response.json()
-    return api_result
+    return api_result, get_all_text(api_result) 
     
 
 def create_en_resource(filename):
@@ -195,11 +194,11 @@ def get_all_text(gcloud_data):
     return all_texts
 
 def create_note_from_highlight(image_file):
-    json_data=google_ocr_img(image_file)
+    json_data, all_texts =google_ocr_img(image_file)
     # json_data=open("jsons/api_result.json").read()
 
     # data = json.loads(json_data)
-    all_texts = get_all_text(data)
+    # all_texts = get_all_text(data)
 
     dev_token = "S=s1:U=946af:E=1691629fdb0:C=161be78cfa0:P=1cd:A=en-devtoken:V=2:H=62d05bfbbde1b056b12169ea273b31ce"
     client = EvernoteClient(token=dev_token)
