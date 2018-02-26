@@ -115,7 +115,7 @@ def google_ocr_img(img_path):
                 'User-Agent': useragent})
     api_result = response.json()
     all_texts = get_all_text(api_result) 
-    return api_result, "<br>".join(all_texts)
+    return api_result, all_texts
     
 
 def create_en_resource(filename):
@@ -198,6 +198,7 @@ def get_all_text(gcloud_data):
 
 def create_note_from_highlight(image_file):
     json_data, all_texts =google_ocr_img(image_file)
+    note_content = "\n\n".join(all_texts)
     # json_data=open("jsons/api_result.json").read()
 
     # data = json.loads(json_data)
@@ -217,7 +218,7 @@ def create_note_from_highlight(image_file):
 
     try:
         resources = create_en_resource(image_file)
-        note = makeNote(dev_token, noteStore, "Test-HILI", all_texts,
+        note = makeNote(dev_token, noteStore, "Test-HILI", note_content,
                  parentNotebook=parentNotebook, resources=resources)
         msg = note.title + " created in " + parentNotebook + "!"
     except:
