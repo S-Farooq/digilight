@@ -217,11 +217,11 @@ def get_all_text(gcloud_data):
     for textAnnotations in gcloud_data['responses']:
         text_raw = textAnnotations['fullTextAnnotation']['text'].encode('ascii','ignore')
         text = text_raw.replace("\n", " ")
-        all_texts.append(text)
+        all_texts.append(text.strip())
 
     return all_texts
 
-def create_note_from_highlight(image_file, all_texts, ocr=False, title=''):
+def create_note_from_highlight(image_file, all_texts, ocr=False, notetitle=''):
     from time import gmtime, strftime
 
     if notetitle=='':
