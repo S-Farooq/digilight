@@ -70,11 +70,12 @@ def upload():
         session['filename']=contoured_img
         return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img))
     elif request.form['btn'] == 'createnote':
-        file_path = UPLOAD_PATH+session['filename']
+        contoured_img = session['filename']
+        file_path = UPLOAD_PATH+contoured_img
         notetitle = request.form['title']
         ocr_text = request.form['content']
         msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text], ocr=False, notetitle=notetitle)
-        return render_template("index.html", note_msg=msg+" "+str(file_path)+"\n\n"+str(notecontent), file_path=str(file_path))
+        return render_template("index.html", note_msg=msg+" "+str(file_path)+"\n\n"+str(notecontent), file_path=str(UPLOAD_FOLDER+contoured_img))
     else:
         return render_template('index.html')
 
