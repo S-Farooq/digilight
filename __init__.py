@@ -75,7 +75,8 @@ def upload():
         ocr_texts = session['ocr_texts']
         msg, ocr_texts = hili.create_note_from_highlight(file_path, ocr_texts, ocr=False)
         return render_template("index.html", note_msg=str(msg)+"<br><br>".join(ocr_texts), file_path=str(file_path))
-
+    else:
+        return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
