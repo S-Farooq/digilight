@@ -108,8 +108,8 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <textarea class="form-control" name="content" id="content" required data-validation-required-message="Please enter content.">
-                    {{ output_print }}</textarea>
+                    <textarea class="form-control" name="content" id="content" required data-validation-required-message="Please enter content."
+                    >{{ output_print }}</textarea>
                     <p class="help-block text-danger"></p>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
       {% if note_msg %}
           <div class="container text-center">
                 <div class="row">
-                <h5>{{ note_msg }}</h5>
+                <p>{{ note_msg }}</p>
                 </div>
         </div>
       {% endif %}
