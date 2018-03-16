@@ -244,15 +244,16 @@ def create_note_from_highlight(image_file, all_texts, ocr=False, notetitle=''):
 
     noteStore = client.get_note_store()
     notebooks = noteStore.listNotebooks()
-    found=0
+    found=False
     for n in notebooks:
         if n.name=='Digilights':
             parentNotebook=n
-            found=1
+            found=True
 
     if not found:
-        n = noteStore.createNotebook("Digilights")
-        parentNotebook = n.name
+        ourNotebook = Types.Notebook()
+        ourNotebook.name = "Digilights"
+        parentNotebook = noteStore.createNotebook(ourNotebook)
 
 
     try:
