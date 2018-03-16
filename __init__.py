@@ -73,7 +73,7 @@ def upload():
         file_path = UPLOAD_PATH+session['filename']
         notetitle = request.form['title']
         ocr_text = request.form['content']
-        msg, ocr_texts = hili.create_note_from_highlight(file_path, [ocr_text], ocr=False, title=notetitle)
+        msg, ocr_texts = hili.create_note_from_highlight(file_path, [ocr_text], ocr=False, notetitle=notetitle)
         return render_template("index.html", note_msg=str(msg)+str(ocr_text), file_path=str(file_path))
     else:
         return render_template('index.html')
