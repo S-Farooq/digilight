@@ -215,7 +215,9 @@ def get_all_text(gcloud_data):
     # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
     all_texts = []
     for textAnnotations in gcloud_data['responses']:
-        all_texts.append(textAnnotations['fullTextAnnotation']['text'].encode('ascii','ignore'))
+        text_raw = textAnnotations['fullTextAnnotation']['text'].encode('ascii','ignore')
+        text = text_raw.replace("\n", " ")
+        all_texts.append(text)
 
     return all_texts
 
