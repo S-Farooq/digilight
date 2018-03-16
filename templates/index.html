@@ -84,18 +84,58 @@
       
     </header>
 
+
+     {% if output_print %}
+    <section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading text-uppercase">Create an Evernote</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <form method="POST" id="noteForm" name="sentMessage" novalidate>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <input class="form-control" name="title" id="title" type="text" placeholder="Note Title" required data-validation-required-message="Please enter a title.">
+                    <p class="help-block text-danger"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <textarea class="form-control" name="content" id="content" required data-validation-required-message="Please enter content."
+                    value="{{ output_print }}"></textarea>
+                    <p class="help-block text-danger"></p>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-12 text-center">
+                  <div id="success"></div>
+                  <button id="createnote" name="createnote" class="btn btn-primary btn-xl text-uppercase" type="submit">Send Message</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
     {% if file_path %}
-    <!-- Services -->
     <section id="services">
-      
-      <div class="container text-center">
-            <div class="row">
-            <h5>{{ output_print }}</h5>
-            </div>
-    </div>
+      {% if note_msg %}
+          <div class="container text-center">
+                <div class="row">
+                <h5>{{ note_msg }}</h5>
+                </div>
+        </div>
+      {% endif %}
     <div class="container text-center">
-               <!-- <div class="row" id="image_preview" style="display:hidden;" >
-                 </div> -->
+               
             <div class="row">
                <div class='col-md-12'>
                <img class='img-responsive' style="width: 100%; height: auto; border:1px; border-color:#fed136;" src="
@@ -108,8 +148,6 @@
         
     </section>
     {% endif %}
-
-    
 
     <!-- Footer -->
     <footer>

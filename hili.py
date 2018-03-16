@@ -219,8 +219,12 @@ def get_all_text(gcloud_data):
 
     return all_texts
 
-def create_note_from_highlight(image_file):
-    json_data, all_texts =google_ocr_img(image_file)
+def create_note_from_highlight(image_file, all_texts, ocr=False):
+    from time import gmtime, strftime
+    curr_time = strftime("%Y-%m-%d", gmtime())
+    if ocr:
+        json_data, all_texts =google_ocr_img(image_file)
+        
     note_content = "\n\n".join(all_texts)
     # json_data=open("jsons/api_result.json").read()
 
@@ -234,13 +238,20 @@ def create_note_from_highlight(image_file):
 
     noteStore = client.get_note_store()
     notebooks = noteStore.listNotebooks()
+    found=0
     for n in notebooks:
-        if n.name=='hilis':
+        if n.name=='Digilights':
             parentNotebook=n
+            found=1
+
+    if not found:
+        n = noteStore.createNotebook("Digilights")
+        parentNotebook = n.name
+
 
     try:
         resources = create_en_resource(image_file)
-        note = makeNote(dev_token, noteStore, "Test-HILI", note_content,
+        note = makeNote(dev_token, noteStore, "hilight {curr_time}".format(curr_time=curr_time), note_content,
                  parentNotebook=parentNotebook, resources=resources)
         msg = note.title + " created in " + parentNotebook + "!"
     except:

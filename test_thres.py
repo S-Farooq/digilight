@@ -4,6 +4,11 @@ import requests
 
 import cv2
 import numpy as np
+with open('/var/www/Digilight/digilight/config.json') as json_data_file:
+    data = json.load(json_data_file)
+#  Client Keys
+GOOGLE_API_KEY = data['google_api_key']
+
 
 def convert_img_to_json(input_file):
     """Translates the input file into a json output file.
@@ -91,7 +96,7 @@ def google_ocr_img(img_path):
     cv2.imwrite(cropped_hili_img, imgray)
 
     data = convert_img_to_json([cropped_hili_img+" 7:10"])
-    response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
+    response = requests.post(url="https://vision.googleapis.com/v1/images:annotate?key={key}".format(key=GOOGLE_API_KEY),
         data=data,
         headers={'Content-Type': 'application/json'})
 

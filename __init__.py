@@ -12,10 +12,6 @@ import base64
 import urllib, difflib
 
 import hili as hili
-
-
-
-
 from flask import Flask, render_template, request
 from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
 
@@ -66,14 +62,19 @@ def my_form():
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():
-    if request.method == 'POST' and 'images' in request.files:
+    if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
         contoured_img = hili.contour_img(UPLOAD_PATH+filename)
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
-        # msg=''
-        # msg, ocr_texts = hili.create_note_from_highlight(UPLOAD_PATH+contoured_img)
-        # return filename
-    return render_template("index.html", output_print="<br><br>".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img))
+
+        session['filename']=contoured_img
+        session['ocr_texts']=ocr_texts
+        return render_template("index.html", output_print="<br><br>".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img))
+    elif request.form['btn'] == 'createnote':
+        file_path = UPLOAD_PATH+session['filename']
+        ocr_texts = session['ocr_texts']
+        msg, ocr_texts = hili.create_note_from_highlight(file_path, ocr_texts, ocr=False)
+        return render_template("index.html", note_msg=str(msg)+"<br><br>".join(ocr_texts), file_path=str(file_path))
 
 
 if __name__ == '__main__':
