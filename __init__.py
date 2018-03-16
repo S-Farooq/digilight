@@ -27,8 +27,6 @@ with open('/var/www/Digilight/digilight/config.json') as json_data_file:
     data = json.load(json_data_file)
 app.secret_key = data['secret_key']
 #  Client Keys
-CLIENT_ID = data['client_id']
-CLIENT_SECRET = data['client_secret']
 
 photos = UploadSet('photos', IMAGES)
 

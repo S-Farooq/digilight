@@ -16,6 +16,11 @@ import numpy as np
 
 import os 
 main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
+with open('/var/www/Digilight/digilight/config.json') as json_data_file:
+    data = json.load(json_data_file)
+#  Client Keys
+GOOGLE_API_KEY = data['google_api_key']
+EVERNOTE_DEV_TOKEN = data['evernote_dev_token']
 
 DETECTION_TYPES = [
     'TYPE_UNSPECIFIED',
@@ -127,7 +132,7 @@ def google_ocr_img(img_path):
     data = convert_img_to_json([img_path+" 7:5"])
     useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
 
-    response = requests.post(url='https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCRCwqeqr8FMivse-xvpSqAsnJvHeDAGvk',
+    response = requests.post(url="https://vision.googleapis.com/v1/images:annotate?key={key}".format(key=GOOGLE_API_KEY),
         data=json.dumps(data),
         headers={'Content-Type': 'application/json',
                 'User-Agent': useragent})
@@ -222,8 +227,7 @@ def create_note_from_highlight(image_file):
     # data = json.loads(json_data)
     # all_texts = get_all_text(data)
 
-    dev_token = "S=s1:U=946af:E=1691629fdb0:C=161be78cfa0:P=1cd:A=en-devtoken:V=2:H=62d05bfbbde1b056b12169ea273b31ce"
-    client = EvernoteClient(token=dev_token)
+    client = EvernoteClient(token=EVERNOTE_DEV_TOKEN)
     userStore = client.get_user_store()
     user = userStore.getUser()
 
