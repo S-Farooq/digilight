@@ -256,12 +256,12 @@ def create_note_from_highlight(image_file, all_texts, ocr=False, notetitle=''):
         parentNotebook = noteStore.createNotebook(ourNotebook)
 
 
-    # try:
-    resources = create_en_resource(image_file)
-    note = makeNote(EVERNOTE_DEV_TOKEN, noteStore, notetitle, note_content,
-             parentNotebook=parentNotebook, resources=resources)
-    msg = note.title + " created in " + parentNotebook + "!"
-    # except:
-        # return "ERROR: Couldnt make evernote.", note_content
-
+    try:
+        resources = create_en_resource(image_file)
+        note = makeNote(EVERNOTE_DEV_TOKEN, noteStore, notetitle, note_content,
+                 parentNotebook=parentNotebook, resources=resources)
+    except:
+        return "ERROR: Couldnt make evernote.", note_content
+    
+    msg = note.title + " created in " + parentNotebook.name + "!"
     return msg, note_content
