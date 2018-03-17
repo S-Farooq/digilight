@@ -220,7 +220,7 @@ def get_all_text(gcloud_data):
 
     return all_texts
 
-def create_note_from_highlight(client,image_file, all_texts, ocr=False, notetitle=''):
+def create_note_from_highlight(authToken,image_file, all_texts, ocr=False, notetitle=''):
     from time import gmtime, strftime
 
     if notetitle=='':
@@ -236,7 +236,7 @@ def create_note_from_highlight(client,image_file, all_texts, ocr=False, notetitl
     # data = json.loads(json_data)
     # all_texts = get_all_text(data)
 
-    # client = EvernoteClient(token=EVERNOTE_DEV_TOKEN)
+    client = EvernoteClient(token=authToken)
     userStore = client.get_user_store()
     user = userStore.getUser()
 
@@ -257,7 +257,7 @@ def create_note_from_highlight(client,image_file, all_texts, ocr=False, notetitl
 
     try:
         resources = create_en_resource(image_file)
-        note = makeNote(EVERNOTE_DEV_TOKEN, noteStore, notetitle, note_content,
+        note = makeNote(authToken, noteStore, notetitle, note_content,
                  parentNotebook=parentNotebook, resources=resources)
     except:
         return "ERROR: Couldnt make evernote.", note_content

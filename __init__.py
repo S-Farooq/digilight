@@ -78,11 +78,10 @@ def callback():
         return render_template("index.html", note_msg=Markup("<h2>ERROR: Couldn't authenticate your account...</h2>"),
          file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
 
-    client = EvernoteClient(token=access_token)
     contoured_img = session['filename']
     notetitle = session['notetitle']
     ocr_text = session['ocr_text']
-    msg, notecontent = hili.create_note_from_highlight(client,file_path, 
+    msg, notecontent = hili.create_note_from_highlight(access_token,file_path, 
         [ocr_text.strip()], ocr=False, notetitle=notetitle)
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
     note_msg=Markup(note_msg)
@@ -115,10 +114,10 @@ def upload():
         session['ocr_text'] = ocr_text
 
         auth()
-        msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
-        note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-        note_msg=Markup(note_msg)
-        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+        # msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        # note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
+        # note_msg=Markup(note_msg)
+        # return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
 
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
@@ -131,8 +130,7 @@ def upload():
         file_path = UPLOAD_PATH+contoured_img
         notetitle = ''
         ocr_text = "\n".join(ocr_texts)
-        client = get_evernote_client(token=EVERNOTE_DEV_TOKEN)
-        msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        msg, notecontent = hili.create_note_from_highlight(EVERNOTE_DEV_TOKEN,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
         note_msg=Markup(note_msg)
         return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
