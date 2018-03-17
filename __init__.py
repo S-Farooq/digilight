@@ -104,11 +104,11 @@ def upload():
         session['notetitle'] = notetitle
         session['ocr_text'] = ocr_text
 
-        auth()
-        # msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
-        # note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-        # note_msg=Markup(note_msg)
-        # return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+        return auth()
+        msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
+        note_msg=Markup(note_msg)
+        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
 
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
