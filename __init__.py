@@ -13,7 +13,7 @@ import urllib, difflib
 
 import hili as hili
 from flask import Flask, render_template, request
-from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 from evernote.api.client import EvernoteClient
 
 def root_dir():  # pragma: no cover
