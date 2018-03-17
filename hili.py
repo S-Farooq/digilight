@@ -103,6 +103,9 @@ def contour_img(img_path,thresh=400,std_dev=7):
     # klist_filtered = klist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
     avglatlist_filtered = avglatlist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
     while len(avglatlist_filtered)==0:
+        if std_dev<1.5:
+            return False
+            break
         std_dev=std_dev-0.5
         avglatlist_filtered = avglatlist_np[(abs(klist_np - np.mean(klist_np))) > (std_dev * np.std(klist_np))]
 

@@ -65,6 +65,8 @@ def upload():
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         filename = photos.save(request.files['images'])
         contoured_img = hili.contour_img(UPLOAD_PATH+filename)
+        if not contoured_img:
+            return render_template("index.html", note_msg="<h2>Sorry! Nothing detected, try another image</h2>", file_path=str(UPLOAD_FOLDER+filename),scroll="services")
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
 
         session['filename']=contoured_img
@@ -75,7 +77,8 @@ def upload():
         notetitle = request.form['title']
         ocr_text = request.form['content']
         msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
-        return render_template("index.html", note_msg=msg+"<br/><br/>"+str(notecontent), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="services")
+        note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
+        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="services")
     else:
         return render_template('index.html')
 
