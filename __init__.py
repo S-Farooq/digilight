@@ -68,14 +68,14 @@ def upload():
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
 
         session['filename']=contoured_img
-        return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img))
+        return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="notecreation")
     elif request.form['btn'] == 'createnote':
         contoured_img = session['filename']
         file_path = UPLOAD_PATH+contoured_img
         notetitle = request.form['title']
         ocr_text = request.form['content']
         msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
-        return render_template("index.html", note_msg=msg+"\r\n\r\n"+str(notecontent), file_path=str(UPLOAD_FOLDER+contoured_img))
+        return render_template("index.html", note_msg=msg+"<br/><br/>"+str(notecontent), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="services")
     else:
         return render_template('index.html')
 
