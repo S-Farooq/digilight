@@ -93,7 +93,7 @@
     </header>
 
 
-    {% if file_path %}
+    {% if note_msg %}
     <section id="services">
 
       {% if note_msg %}
@@ -132,7 +132,11 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-12">
+        <div class='col-lg-6'>
+               <img class='img-responsive' style="width: 100%; height: auto; border:1px; border-color:#fed136;" src="
+               {{ url_for('static', filename=file_path) }}">
+               </div>
+          <div class="col-lg-6">
             <form method="POST" id="noteForm" name="sentMessage" novalidate>
               <div class="row">
                 <div class="col-md-12">
