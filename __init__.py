@@ -79,7 +79,7 @@ def upload():
         ocr_text = request.form['content']
         msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-        note_msg=Markup(notemsg)
+        note_msg=Markup(note_msg)
         return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="services")
     else:
         return render_template('index.html')
