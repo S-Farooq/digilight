@@ -140,7 +140,7 @@
         </div>
         <div class="row">
         <div class='col-lg-5'>
-               <img class='img-responsive' style="width: 100%; height: auto; border:1px; border-color:#fed136;" src="
+               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;" src="
                {{ url_for('static', filename=file_path) }}">
                </div>
           {% if note_msg %}
@@ -152,7 +152,7 @@
             <form method="POST" id="noteForm" name="sentMessage" novalidate>
               <div class="row">
                 <div class="col-md-12">
-                  <div class="form-group">
+                  <div class="form-group" style="margin-top:5px;">
                     <input class="form-control" name="title" id="title" type="text" placeholder="Note Title" required data-validation-required-message="Please enter a title.">
                     <p class="help-block text-danger"></p>
                   </div>
@@ -190,12 +190,12 @@
           <div class="col-md-4">
             <ul class="list-inline social-buttons">
               <li class="list-inline-item">
-                <a href="#">
+                <a href="https://twitter.com/shahamfarooq" target="_blank">
                   <i class="fa fa-twitter"></i>
                 </a>
               </li>
               <li class="list-inline-item">
-                <a href="#">
+                <a href="http://shaham.me/" target="_blank">
                   <i class="fa fa-user"></i>
                 </a>
               </li>
@@ -255,7 +255,7 @@
   <script>
       var target = $('#' + '{{ scroll }}');
       $('html, body').animate({
-        scrollTop: (target.offset().top - 54)
+        scrollTop: (target.offset().top - 35)
       }, 1000, "easeInOutExpo");
       // document.getElementById('{{ scroll }}').scrollIntoView();
       // document.location.hash = '#' + '{{ scroll }}';

@@ -16,11 +16,7 @@ import numpy as np
 
 import os 
 main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
-with open('/var/www/Digilight/digilight/config.json') as json_data_file:
-    data = json.load(json_data_file)
-#  Client Keys
-GOOGLE_API_KEY = data['google_api_key']
-EVERNOTE_DEV_TOKEN = data['evernote_dev_token']
+from config import GOOGLE_API_KEY
 
 DETECTION_TYPES = [
     'TYPE_UNSPECIFIED',
@@ -224,7 +220,7 @@ def get_all_text(gcloud_data):
 
     return all_texts
 
-def create_note_from_highlight(image_file, all_texts, ocr=False, notetitle=''):
+def create_note_from_highlight(client,image_file, all_texts, ocr=False, notetitle=''):
     from time import gmtime, strftime
 
     if notetitle=='':
@@ -240,7 +236,7 @@ def create_note_from_highlight(image_file, all_texts, ocr=False, notetitle=''):
     # data = json.loads(json_data)
     # all_texts = get_all_text(data)
 
-    client = EvernoteClient(token=EVERNOTE_DEV_TOKEN)
+    # client = EvernoteClient(token=EVERNOTE_DEV_TOKEN)
     userStore = client.get_user_store()
     user = userStore.getUser()
 

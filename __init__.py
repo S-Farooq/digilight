@@ -14,15 +14,21 @@ import urllib, difflib
 import hili as hili
 from flask import Flask, render_template, request
 from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
+from evernote.api.client import EvernoteClient
 
 def root_dir():  # pragma: no cover
     return os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-with open('/var/www/Digilight/digilight/config.json') as json_data_file:
-    data = json.load(json_data_file)
-app.secret_key = data['secret_key']
+from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET
+
+app.secret_key = SECRET_KEY
 #  Client Keys
+
+# Server-side Parameters
+CLIENT_SIDE_URL = "http://test.shaham.me"
+REDIRECT_URI = "{}/callback/q".format(CLIENT_SIDE_URL)
+
 
 photos = UploadSet('photos', IMAGES)
 
@@ -35,25 +41,53 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_PATH
 configure_uploads(app, photos)
 
+def get_evernote_client(token=None):
+    if token:
+        return EvernoteClient(token=token, sandbox=True)
+    else:
+        return EvernoteClient(
+            consumer_key=EN_CONSUMER_KEY,
+            consumer_secret=EN_CONSUMER_SECRET,
+            sandbox=True
+        )
 
-def get_mrkup_from_df(reco_df,to_display_amount=10):
-    reco_mrkup = ["""<table class="table table-hover"><thead><tr>
-        <th>{columns}</th></tr></thead><tbody>
-      """.format(columns="</th><th>".join(reco_df.columns))]
+def auth():
+    client = get_evernote_client()
+    callbackUrl = REDIRECT_URI
+    request_token = client.get_request_token(callbackUrl)
 
-    for index, row in reco_df.iterrows():
-        if to_display_amount==0:
-            break
-        to_display_amount = to_display_amount - 1
-        row = [str(x).upper() for x in row]
-        reco_mrkup.append("""<tr>
-        <th>{vals}</th></tr>
-            """.format(vals="</th><th>".join(row)))
+    # Save the request token information for later
+    session['oauth_token'] = request_token['oauth_token']
+    session['oauth_token_secret'] = request_token['oauth_token_secret']
 
-    reco_mrkup.append("""</tbody></table>""")
-    reco_display = "\n".join(reco_mrkup)
-    return reco_display
+    # Redirect the user to the Evernote authorization URL
+    return redirect(client.get_authorize_url(request_token))
 
+
+@app.route("/callback/q")
+def callback():
+    try:
+        client = get_evernote_client()
+        client.get_access_token(
+            session['oauth_token'],
+            session['oauth_token_secret'],
+            request.args.get('oauth_verifier', '')
+        )
+    except KeyError:
+        contoured_img = session['filename']
+        return render_template("index.html", note_msg=Markup("<h2>ERROR: Couldn't authenticate your account...</h2>"),
+         file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+
+    client = EvernoteClient(token=access_token)
+    contoured_img = session['filename']
+    notetitle = session['notetitle']
+    ocr_text = session['ocr_text']
+    msg, notecontent = hili.create_note_from_highlight(client,file_path, 
+        [ocr_text.strip()], ocr=False, notetitle=notetitle)
+    note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
+    note_msg=Markup(note_msg)
+    return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")    
+    # return redirect(url_for('.my_form'))
 
 @app.route('/')
 def my_form():
@@ -69,7 +103,7 @@ def upload():
             msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
             return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
-
+        
         session['filename']=contoured_img
         return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     elif request.form['btn'] == 'createnote':
@@ -77,7 +111,11 @@ def upload():
         file_path = UPLOAD_PATH+contoured_img
         notetitle = request.form['title']
         ocr_text = request.form['content']
-        msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        session['notetitle'] = notetitle
+        session['ocr_text'] = ocr_text
+
+        auth()
+        msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
         note_msg=Markup(note_msg)
         return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
@@ -93,10 +131,21 @@ def upload():
         file_path = UPLOAD_PATH+contoured_img
         notetitle = ''
         ocr_text = "\n".join(ocr_texts)
-        msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        client = get_evernote_client(token=EVERNOTE_DEV_TOKEN)
+        msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
         note_msg=Markup(note_msg)
         return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+    elif request.form['btn'] == 'sample':
+        filename = "highlight-sample_1.jpg"
+        contoured_img = hili.contour_img(UPLOAD_PATH+filename)
+        if not contoured_img:
+            msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
+            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
+        api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
+
+        session['filename']=contoured_img
+        return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     else:
         return render_template('index.html')
 
