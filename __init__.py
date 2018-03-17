@@ -94,7 +94,11 @@ def upload():
         if not contoured_img:
             msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
             return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
-        api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
+        try:
+            api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
+        except:
+            msg=Markup("<h2>Sorry! Could not get any text from the countoured image.. try another image.</h2>")
+            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
         
         session['filename']=contoured_img
         return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
