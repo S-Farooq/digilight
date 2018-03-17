@@ -64,6 +64,7 @@ def callback():
             session['oauth_token_secret'],
             request.args.get('oauth_verifier', '')
         )
+        session['access_token']=access_token
     except KeyError:
         contoured_img = session['filename']
         return render_template("index.html", note_msg=Markup("<h2>ERROR: Couldn't authenticate your account...</h2>"),
@@ -82,7 +83,7 @@ def callback():
 
 @app.route('/')
 def my_form():
-    session.clear()
+    # session.clear()
     return render_template('index.html')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -104,9 +105,11 @@ def upload():
         ocr_text = request.form['content']
         session['notetitle'] = notetitle
         session['ocr_text'] = ocr_text
-
-        return auth()
-        msg, notecontent = hili.create_note_from_highlight(client,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        try:
+            access_token = session['access_token']
+        except:
+            return auth()
+        msg, notecontent = hili.create_note_from_highlight(access_token,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
         note_msg=Markup(note_msg)
         return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
