@@ -72,6 +72,7 @@ def callback():
     contoured_img = session['filename']
     notetitle = session['notetitle']
     ocr_text = session['ocr_text']
+    file_path = UPLOAD_PATH+contoured_img
     msg, notecontent = hili.create_note_from_highlight(access_token,file_path, 
         [ocr_text.strip()], ocr=False, notetitle=notetitle)
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
