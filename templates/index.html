@@ -78,17 +78,15 @@
               </div>
               </div>
             <div class="row">
-              <div class="col-md-6">
-                <button style="margin:5px;" id="submitbtn" name="btn" value="submitbtn" class="btn btn-primary btn-xl text-uppercase" type="submit">Digitize it.</button>
-                  <!-- <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/> -->
+              <div class="col-lg-12">
+                <div class="btn-group">
+                  <button style="margin:5px;" id="submitbtn" name="btn" value="submitbtn" class="btn btn-primary btn-xl text-uppercase" type="submit">Digitize it.</button>
+                  <button style="margin:5px;" id="submitbtnluck" name="btn" value="lucky" class="btn btn-primary btn-xl text-uppercase" type="submit">Feeling lucky!</button>
+                    <!-- <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/> -->
+                </div>
               </div>
-              <div class="col-md-6">
-                <button style="margin:5px;" id="submitbtnluck" name="btn" value="lucky" class="btn btn-primary btn-xl text-uppercase" type="submit">Feeling lucky!</button>
-                  <!-- <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/> -->
-              </div>
-
-             </div>
-             </form>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -146,7 +144,7 @@
                {{ url_for('static', filename=file_path) }}">
                </div>
           {% if note_msg %}
-          <div class="col-lg-7 text-center">
+          <div style="color:white !important;" class="col-lg-7 text-center">
                 {{ note_msg }}
                 </div>
           {% else %}
