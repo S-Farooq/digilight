@@ -17,6 +17,8 @@ import numpy as np
 import os 
 main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
 from config import GOOGLE_API_KEY
+from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET
+
 
 DETECTION_TYPES = [
     'TYPE_UNSPECIFIED',
@@ -28,6 +30,17 @@ DETECTION_TYPES = [
     'SAFE_SEARCH_DETECTION',
     'DOCUMENT_TEXT_DETECTION'
 ]
+
+def get_evernote_client(token=None):
+    if token:
+        return EvernoteClient(token=token, sandbox=True)
+    else:
+        return EvernoteClient(
+            consumer_key=EN_CONSUMER_KEY,
+            consumer_secret=EN_CONSUMER_SECRET,
+            sandbox=True
+        )
+
 
 def convert_img_to_json(input_file):
     """Translates the input file into a json output file.
@@ -236,7 +249,7 @@ def create_note_from_highlight(authToken,image_file, all_texts, ocr=False, notet
     # data = json.loads(json_data)
     # all_texts = get_all_text(data)
 
-    client = EvernoteClient(token=authToken)
+    client = get_evernote_client(authToken)
     userStore = client.get_user_store()
     user = userStore.getUser()
 

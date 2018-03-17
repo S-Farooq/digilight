@@ -41,18 +41,9 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_PATH
 configure_uploads(app, photos)
 
-def get_evernote_client(token=None):
-    if token:
-        return EvernoteClient(token=token, sandbox=True)
-    else:
-        return EvernoteClient(
-            consumer_key=EN_CONSUMER_KEY,
-            consumer_secret=EN_CONSUMER_SECRET,
-            sandbox=True
-        )
 
 def auth():
-    client = get_evernote_client()
+    client = hili.get_evernote_client()
     callbackUrl = REDIRECT_URI
     request_token = client.get_request_token(callbackUrl)
 
@@ -67,8 +58,8 @@ def auth():
 @app.route("/callback/q")
 def callback():
     try:
-        client = get_evernote_client()
-        client.get_access_token(
+        client = hili.get_evernote_client()
+        access_token  = client.get_access_token(
             session['oauth_token'],
             session['oauth_token_secret'],
             request.args.get('oauth_verifier', '')
