@@ -78,8 +78,12 @@
               </div>
               </div>
             <div class="row">
-              <div class="col-md-12">
-                <button style="margin-top:5px;" id="submitbtn" name="btn" value="submitbtn" class="btn btn-primary btn-xl text-uppercase" type="submit">Digitize it.</button>
+              <div class="col-md-6">
+                <button style="margin:5px;" id="submitbtn" name="btn" value="submitbtn" class="btn btn-primary btn-xl text-uppercase" type="submit">Digitize it.</button>
+                  <!-- <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/> -->
+              </div>
+              <div class="col-md-6">
+                <button style="margin:5px;" id="submitbtnluck" name="btn" value="lucky" class="btn btn-primary btn-xl text-uppercase" type="submit">Feeling lucky!</button>
                   <!-- <input type="submit" class="btn btn-primary" name='submitbtn' value="Digitize it."/> -->
               </div>
 
@@ -92,15 +96,17 @@
       
     </header>
 
-
+<!-- 
     {% if note_msg %}
     <section id="services">
 
       {% if note_msg %}
           <div class="container text-center">
-                <div class="row">
+              <div class="row">
+                <div class="col-lg-12 text-center">
                 {{ note_msg }}
                 </div>
+              </div>
         </div>
       {% endif %}
     <div class="container text-center">
@@ -110,10 +116,13 @@
                 </div>
               </div>
             <div class="row">
-               <div class='col-md-12'>
+               <div class='col-md-5'>
                <img class='img-responsive' style="width: 100%; height: auto; border:1px; border-color:#fed136;" src="
                {{ url_for('static', filename=file_path) }}">
                </div>
+                 <div class="col-lg-7 text-center">
+                {{ note_msg }}
+                </div>
              </div>
                
 
@@ -122,8 +131,8 @@
     </section>
     {% endif %}
 
-
-     {% if output_print %}
+ -->
+     {% if file_path %}
     <section id="contact">
       <div class="container">
         <div class="row">
@@ -136,6 +145,11 @@
                <img class='img-responsive' style="width: 100%; height: auto; border:1px; border-color:#fed136;" src="
                {{ url_for('static', filename=file_path) }}">
                </div>
+          {% if note_msg %}
+          <div class="col-lg-7 text-center">
+                {{ note_msg }}
+                </div>
+          {% else %}
           <div class="col-lg-7">
             <form method="POST" id="noteForm" name="sentMessage" novalidate>
               <div class="row">
@@ -162,6 +176,7 @@
               </div>
             </form>
           </div>
+          {% endif %}
         </div>
       </div>
     </section>

@@ -67,7 +67,7 @@ def upload():
         contoured_img = hili.contour_img(UPLOAD_PATH+filename)
         if not contoured_img:
             msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
-            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="services")
+            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
 
         session['filename']=contoured_img
@@ -80,7 +80,23 @@ def upload():
         msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
         note_msg=Markup(note_msg)
-        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="services")
+        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+
+    elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files::
+        filename = photos.save(request.files['images'])
+        contoured_img = hili.contour_img(UPLOAD_PATH+filename)
+        if not contoured_img:
+            msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
+            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
+        api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
+
+        file_path = UPLOAD_PATH+contoured_img
+        notetitle = ''
+        ocr_text = "\n".join(ocr_texts)
+        msg, notecontent = hili.create_note_from_highlight(file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
+        note_msg=Markup(note_msg)
+        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     else:
         return render_template('index.html')
 
