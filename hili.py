@@ -299,6 +299,11 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
     return note
 
 def remove_gibberish(text):
+    import nltk
+    
+    nltk.data.path.append("/home/shahamfarooq/nltk_data/")
+    nltk.data.path.append("/home/shahamfarooq/miniconda2/lib/nltk_data/")
+    nltk.data.path.append("/home/shahamfarooq/miniconda2/nltk_data/")
     from nltk.corpus import words
     
     test = text.split(" ")
