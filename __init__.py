@@ -1,23 +1,13 @@
 
 
 from flask import Flask, request, redirect, g, render_template, Markup, session, url_for
-import pandas as pd
-import numpy as np
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-import json
-import base64
-import urllib, difflib
-
 import hili as hili
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from evernote.api.client import EvernoteClient
-
-
-def root_dir():  # pragma: no cover
-    return os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET
