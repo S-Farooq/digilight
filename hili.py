@@ -299,6 +299,8 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
     return note
 
 def remove_gibberish(text):
+    from nltk.corpus import words
+    
     test = text.split(" ")
     # final = []
     start=0
@@ -319,7 +321,6 @@ def remove_gibberish(text):
 
 def get_all_text(gcloud_data):
     # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
-    from nltk.corpus import words
     all_texts = []
     for textAnnotations in gcloud_data['responses']:
         text_raw = textAnnotations['fullTextAnnotation']['text'].encode('ascii','ignore')
