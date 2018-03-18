@@ -83,8 +83,67 @@ def get_detection_type(detect_num):
     else:
         return DETECTION_TYPES[0]
 
+def custom_smoothen_cnt(cnt):
+    M = cv2.moments(cnt)
+    cx = int(M['m10'] / M['m00'])
+    cy = int(M['m01'] / M['m00'])
+    leftmost = tuple(cnt[cnt[:, :, 0].argmin()][0])
+    rightmost = tuple(cnt[cnt[:, :, 0].argmax()][0])
+    topmost = tuple(cnt[cnt[:, :, 1].argmin()][0])
+    bottommost = tuple(cnt[cnt[:, :, 1].argmax()][0])
+    print "Edge Points:", leftmost, rightmost, topmost, bottommost
+    area = cv2.contourArea(cnt)
+    print "AREA of Orig Contour:", area
+    newcnt = cnt.copy()
+    for i in range(cnt.shape[0]):
+        x = cnt[i, 0, 0]
+        y = cnt[i, 0, 1]
+        if x>leftmost[0] and y<leftmost[1] and x<cx:
+            newcnt[i, 0, 0] = leftmost[0]
+        elif x<rightmost[0] and y<leftmost[1] and x<cx:
+            newcnt[i, 0, 0] = rightmost[0]
+    area = cv2.contourArea(newcnt)
+    print "AREA of Smoothened Contour:", area
+    return newcnt
 
-def contour_img(img_path,thresh=400,std_dev=7):
+def smoothen_contour(contour):
+    from scipy.interpolate import splprep, splev
+    x, y = contour.T
+    # Convert from numpy arrays to normal arrays
+    x = x.tolist()[0]
+    y = y.tolist()[0]
+    # https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.interpolate.splprep.html
+    tck, u = splprep([x, y], u=None, s=15.0, per=1)
+    # https://docs.scipy.org/doc/numpy-1.10.1/reference/generated/numpy.linspace.html
+    u_new = np.linspace(u.min(), u.max(), len(contour)*0.05)
+    # https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.interpolate.splev.html
+    x_new, y_new = splev(u_new, tck, der=0)
+    # Convert it back to numpy format for opencv to be able to display it
+    res_array = [[[int(i[0]), int(i[1])]] for i in zip(x_new, y_new)]
+    smooth_cnt = np.asarray(res_array, dtype=np.int32)
+    return smooth_cnt
+
+def expand_contour(cnt,expand_rate_x=1.1,expand_rate_y=1.05):
+    M = cv2.moments(cnt)
+    cx = int(M['m10'] / M['m00'])
+    cy = int(M['m01'] / M['m00'])
+    leftmost = tuple(cnt[cnt[:, :, 0].argmin()][0])
+    rightmost = tuple(cnt[cnt[:, :, 0].argmax()][0])
+    topmost = tuple(cnt[cnt[:, :, 1].argmin()][0])
+    bottommost = tuple(cnt[cnt[:, :, 1].argmax()][0])
+    print "Edge Points:", leftmost, rightmost, topmost, bottommost
+    print "Centroid: (",cx,",",cy,")"
+    area = cv2.contourArea(cnt)
+    print "AREA of Contour:",area
+    newcnt = cnt.copy()
+    for i in range(cnt.shape[0]):
+        if abs(cnt[i, 0, 0] - cx)>(abs(leftmost[0]-cx)*0.8) or abs(cnt[i, 0, 1] - cy) > (abs(topmost[1] - cy) * 0.8):
+            newcnt[i, 0, 0] = ((cnt[i, 0, 0] - cx) * expand_rate_x) + cx
+            newcnt[i, 0, 1] = ((cnt[i, 0, 1] - cy) * expand_rate_y) + cy
+
+    return newcnt
+
+def contour_img(img_path,thresh=400,std_dev=7, hsv_lower=[22, 30, 30], hsv_upper=[45, 255, 255]):
     """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
     contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
@@ -92,8 +151,8 @@ def contour_img(img_path,thresh=400,std_dev=7):
     # rgb to HSV color spave conversion
     hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    HSV_lower = np.array([22, 50, 50], np.uint8)  # Lower HSV value
-    HSV_upper = np.array([30, 250, 250], np.uint8)  # Upper HSV value
+    HSV_lower = np.array(hsv_lower, np.uint8)  # Lower HSV value
+    HSV_upper = np.array(hsv_upper, np.uint8)  # Upper HSV value
 
     frame_threshed = cv2.inRange(hsv_img, HSV_lower, HSV_upper)
     # find connected components
@@ -101,7 +160,7 @@ def contour_img(img_path,thresh=400,std_dev=7):
 
     # Draw contours around filtered objects
     OutputImg = image.copy()
-    cnt_lens = [len(x) for x in contours]
+    cnt_lens = [cv2.contourArea(x) for x in contours]
 
     klist = cnt_lens
     avglatlist = range(0,len(cnt_lens))
@@ -125,9 +184,23 @@ def contour_img(img_path,thresh=400,std_dev=7):
     for c in avglatlist_filtered:
         # # remove noise objects having contour length threshold value
         cnt = contours[int(c)]
+
         if len(cnt) > thresh:
-            cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 255), 2)
-            cv2.drawContours(mask, [cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
+            expand_cnt = expand_contour(cnt,expand_rate_x=1.02,expand_rate_y=1.04)
+            # smooth_cnt = smoothen_contour(expand_cnt)
+            epsilon = 0.04*cv2.arcLength(cnt,True)
+            print "Epsilon", epsilon
+            smooth_cnt = cv2.approxPolyDP(expand_cnt, epsilon, False)
+            # cust_smooth_cnt = custom_smoothen_cnt(cnt)
+            cv2.drawContours(OutputImg, [cnt], 0, (0, 0, 50), 1)
+            cv2.drawContours(OutputImg, [expand_cnt], 0, (0, 0, 255), 2)
+            cv2.drawContours(OutputImg, [smooth_cnt], 0, (255, 0, 0), 2)
+            # cv2.drawContours(OutputImg, [smooth_cnt], 0, (0, 255,0), 1)
+            cv2.drawContours(mask, [smooth_cnt], 0, (255,255,255), -1)  # Draw filled contour in mask
+            cv2.drawContours(mask, [expand_cnt], 0, (255, 255, 255), -1)  # Draw filled contour in mask
+
+
+            # hull = cv2.convexHull(cnt)
 
     out[mask == 255] = image[mask == 255]
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
@@ -136,6 +209,7 @@ def contour_img(img_path,thresh=400,std_dev=7):
     j = Image.fromarray(imgray)
     j.save(main_path+"static/uploads/"+contoured_img)
 
+    cv2.imwrite(main_path+"static/uploads/col_"+contoured_img,OutputImg)
     return contoured_img
     
 
@@ -277,3 +351,8 @@ def create_note_from_highlight(authToken,image_file, all_texts, ocr=False, notet
     
     msg = note.title + " created in " + parentNotebook.name + "!"
     return msg, note_content
+
+if __name__ == '__main__':
+    img_path = "sample_images/highlight-sample2.jpg"
+    c = contour_img(img_path, thresh=100, std_dev=7, hsv_lower=[22, 30, 30], hsv_upper=[45, 255, 255])
+    print "Done:",c
