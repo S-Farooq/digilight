@@ -73,7 +73,7 @@ def callback():
     contoured_img = session['filename']
     notetitle = session['notetitle']
     ocr_text = session['ocr_text']
-    file_path = UPLOAD_PATH+contoured_img
+    file_path = UPLOAD_PATH+session['orig_filename']
     msg, notecontent = hili.create_note_from_highlight(access_token,file_path, 
         [ocr_text.strip()], ocr=False, notetitle=notetitle)
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
@@ -101,10 +101,11 @@ def upload():
             return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
         
         session['filename']=contoured_img
+        session['orig_filename']=filename
         return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     elif request.form['btn'] == 'createnote':
         contoured_img = session['filename']
-        file_path = UPLOAD_PATH+contoured_img
+        file_path = UPLOAD_PATH+session['orig_filename']
         notetitle = request.form['title']
         ocr_text = request.form['content']
         session['notetitle'] = notetitle
@@ -126,10 +127,14 @@ def upload():
             return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
 
-        file_path = UPLOAD_PATH+contoured_img
+        file_path = UPLOAD_PATH+filename
         notetitle = ''
         ocr_text = "\n".join(ocr_texts)
-        msg, notecontent = hili.create_note_from_highlight(EVERNOTE_DEV_TOKEN,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
+        try:
+            access_token = session['access_token']
+        except:
+            return auth()
+        msg, notecontent = hili.create_note_from_highlight(access_token,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
         note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
         note_msg=Markup(note_msg)
         return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
@@ -142,6 +147,7 @@ def upload():
         api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
 
         session['filename']=contoured_img
+        session['orig_filename']=filename
         return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     else:
         return render_template('index.html')
