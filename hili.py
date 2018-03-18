@@ -300,7 +300,7 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
 
 def remove_gibberish(text):
     test = text.split(" ")
-    final = []
+    # final = []
     start=0
     end=len(test)
     for i in range(len(test)):
@@ -315,7 +315,7 @@ def remove_gibberish(text):
             end=i
             break
 
-    return " ".join(final[start:end+1])
+    return " ".join(test[start:end+1])
 
 def get_all_text(gcloud_data):
     # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
