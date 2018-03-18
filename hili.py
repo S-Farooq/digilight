@@ -19,7 +19,6 @@ main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
 from config import GOOGLE_API_KEY
 from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET
 
-
 DETECTION_TYPES = [
     'TYPE_UNSPECIFIED',
     'FACE_DETECTION',
@@ -298,31 +297,27 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
     ## Return created note object
     return note
 
-def remove_gibberish(text):
-    import nltk
-
-    nltk.data.path.append("/home/shahamfarooq/nltk_data/")
-    nltk.data.path.append("/home/shahamfarooq/miniconda2/lib/nltk_data/")
-    nltk.data.path.append("/home/shahamfarooq/miniconda2/nltk_data/")
-    from nltk.corpus import words
+# def remove_gibberish(text):
     
-    test = text.split(" ")
-    # final = []
-    start=0
-    end=len(test)
-    for i in range(len(test)):
-        x = test[i]
-        if x in words.words() or x.isdigit():
-            start=i
-            break
+#     from nltk.corpus import words
+    
+#     test = text.split(" ")
+#     # final = []
+#     start=0
+#     end=len(test)
+#     for i in range(len(test)):
+#         x = test[i]
+#         if x in words.words() or x.isdigit():
+#             start=i
+#             break
 
-    for i in range(len(test)-1,-1,-1):
-        x = test[i]
-        if x in words.words() or x.isdigit():
-            end=i
-            break
+#     for i in range(len(test)-1,-1,-1):
+#         x = test[i]
+#         if x in words.words() or x.isdigit():
+#             end=i
+#             break
 
-    return " ".join(test[start:end+1])
+#     return " ".join(test[start:end+1])
 
 def get_all_text(gcloud_data):
     # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
@@ -330,9 +325,9 @@ def get_all_text(gcloud_data):
     for textAnnotations in gcloud_data['responses']:
         text_raw = textAnnotations['fullTextAnnotation']['text'].encode('ascii','ignore')
         text = text_raw.replace("\n", " ")
-        text_cleaned = remove_gibberish(text)
+        # text_cleaned = remove_gibberish(text)
         
-        all_texts.append(text_cleaned.strip())
+        all_texts.append(text.strip())
 
     return all_texts
 
