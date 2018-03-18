@@ -300,7 +300,7 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
 
 def remove_gibberish(text):
     import nltk
-    
+
     nltk.data.path.append("/home/shahamfarooq/nltk_data/")
     nltk.data.path.append("/home/shahamfarooq/miniconda2/lib/nltk_data/")
     nltk.data.path.append("/home/shahamfarooq/miniconda2/nltk_data/")
@@ -322,7 +322,7 @@ def remove_gibberish(text):
             end=i
             break
 
-    return " ".join([str(start),str(end),text])
+    return " ".join(test[start:end+1])
 
 def get_all_text(gcloud_data):
     # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
