@@ -203,6 +203,7 @@ def contour_img(img_path,thresh=400,std_dev=7, hsv_lower=[22, 30, 30], hsv_upper
             # hull = cv2.convexHull(cnt)
 
     out[mask == 255] = image[mask == 255]
+    out[mask == 0] = 255
     imgray = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
     
     #save contoured image to display
