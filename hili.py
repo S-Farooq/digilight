@@ -92,8 +92,8 @@ def contour_img(img_path,thresh=400,std_dev=7):
     # rgb to HSV color spave conversion
     hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    HSV_lower = np.array([15, 25, 40 ], np.uint8)  # Lower HSV value
-    HSV_upper = np.array([35, 250, 255], np.uint8)  # Upper HSV value
+    HSV_lower = np.array([22, 50, 50], np.uint8)  # Lower HSV value
+    HSV_upper = np.array([30, 250, 250], np.uint8)  # Upper HSV value
 
     frame_threshed = cv2.inRange(hsv_img, HSV_lower, HSV_upper)
     # find connected components
