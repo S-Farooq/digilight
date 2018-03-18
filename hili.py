@@ -315,7 +315,7 @@ def remove_gibberish(text):
             end=i
             break
 
-    return " ".join(test[start:end+1])
+    return " ".join([str(start),str(end),text])
 
 def get_all_text(gcloud_data):
     # Returns a Text Array of the OCR data going throught the Gcloud Vision API Response"""
