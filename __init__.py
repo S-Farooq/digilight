@@ -130,8 +130,10 @@ def upload():
     """
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
-        filename = photos.save(request.files['images'])
-        files = [filename]
+        files=[]
+        for f in request.files.getlist('images'):
+            files.append(photos.save(f))
+        # files = [filename]
         session['orig_filenames']=files
         contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         if len(contoured_imgs)==0:
