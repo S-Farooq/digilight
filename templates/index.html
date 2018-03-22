@@ -23,15 +23,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/agency.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/loadingoverlay.min.js') }}"></script>
-    <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
-
-    <script>
-    function showLoad() {
-      $.LoadingOverlay("show");
-    };
-    </script>
-
+    
   </head>
 
   <body id="page-top">
@@ -265,6 +257,9 @@
     <!-- Bootstrap core JavaScript -->
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loadingoverlay.min.js') }}"></script>
+    <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+
 
     <!-- Plugin JavaScript -->
     <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
@@ -277,6 +272,14 @@
     <!-- Custom scripts for this template -->
     <script src="{{ url_for('static', filename='js/agency.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/imgupload.js') }}"></script>
+
+        <script>
+    function showLoad() {
+      $.LoadingOverlay("show");
+    };
+
+    $('.carousel').carousel();
+    </script>
 
 
     <script>
