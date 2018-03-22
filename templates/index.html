@@ -146,8 +146,10 @@
                
                         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                           <ol class="carousel-indicators">
-                          {% for f in range(file_path|length) %}
-                            <li data-target="#carousel-example-generic" data-slide-to="{{ f }}" class="active"></li>
+                          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                          {% for f in range(1,file_path|length) %}
+                            <li data-target="#carousel-example-generic" data-slide-to="{{ f }}"
+                            ></li>
                           {% endfor %}
                             <!-- <li data-target="#carousel-example-generic" data-slide-to="1"></li> -->
                           </ol>
@@ -271,6 +273,7 @@
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/loadingoverlay.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.bcSwipe.js') }}"></script>
     <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
 
 
@@ -294,6 +297,8 @@
     $('.carousel').carousel(
         interval: 2000
       );
+
+    $('.carousel').bcSwipe({ threshold: 50 });
     </script>
 
 
