@@ -57,19 +57,20 @@ def callback():
         session['access_token']=access_token
     except KeyError:
         files = session['orig_filenames']
-        return render_msg(files[0], "<h2>ERROR: Couldn't authenticate your account...</h2>")
+        return render_msg(files, "<h2>ERROR: Couldn't authenticate your account...</h2>")
 
     files_to_attach=session['orig_filenames']
     note_msg = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
-    return render_msg(UPLOAD_FOLDER+files_to_attach[0], note_msg)
+    return render_msg(files_to_attach, note_msg)
     
-def render_msg(filename,msg):
+def render_msg(filenames,msg):
     msgmrkup=Markup(msg)
-    return render_template("index.html", note_msg=msgmrkup, file_path=UPLOAD_FOLDER+filename,scroll="contact")
+    return render_template("index.html", note_msg=msgmrkup, 
+        file_path=[UPLOAD_FOLDER+f for f in filenames],scroll="contact")
 
-def render_result(filename,result):
+def render_result(filenames,result):
     return render_template("index.html", output_print=result, 
-            file_path=UPLOAD_FOLDER+filename,scroll="contact")
+            file_path=[UPLOAD_FOLDER+f for f in filenames],scroll="contact")
 
 
 def process_images(files, highlighted=True):
@@ -137,10 +138,10 @@ def upload():
         session['orig_filenames']=files
         contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         if len(contoured_imgs)==0:
-            return render_msg(files[0], "<h2>Sorry! Nothing detected, try another image</h2>")
+            return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
         
         session['contoured_imgs']=contoured_imgs
-        return render_result(contoured_imgs[0],ocr_text)
+        return render_result(contoured_imgs,ocr_text)
         
     elif request.form['btn'] == 'createnote':
         session['notetitle'] = request.form['title']
@@ -153,7 +154,7 @@ def upload():
         if DEBUG:
             files_to_attach=session['contoured_imgs']
         note_msg = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
-        return render_msg(files_to_attach[0], note_msg)
+        return render_msg(files_to_attach, note_msg)
         
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
@@ -161,7 +162,7 @@ def upload():
         files = [filename]
         contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         if len(contoured_imgs)==0:
-            return render_msg(files[0], "<h2>Sorry! Nothing detected, try another image</h2>")
+            return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
         
         try:
             access_token = session['access_token']
@@ -173,7 +174,7 @@ def upload():
             return auth()
         
         note_msg = process_note('', ocr_text,files)
-        return render_msg(files[0], note_msg)
+        return render_msg(files, note_msg)
         
     # elif request.form['btn'] == 'sample':
     #     filename = "highlight-sample_1.jpg"
