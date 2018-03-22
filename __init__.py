@@ -60,11 +60,16 @@ def callback():
         return render_msg(files, "<h2>ERROR: Couldn't authenticate your account...</h2>")
 
     files_to_attach=session['orig_filenames']
-    note_msg = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
-    return render_msg(files_to_attach, note_msg)
+    note_msg, notecontent = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
+    return render_msg(files_to_attach, note_msg, tweet_text=notecontent)
     
-def render_msg(filenames,msg):
+def render_msg(filenames,msg, tweet_text=None):
     msgmrkup=Markup(msg)
+    if tweet_text:
+        return render_template("index.html", note_msg=msgmrkup, 
+        file_path=[UPLOAD_FOLDER+f for f in filenames],scroll="contact",
+        tweet=tweet_text)
+            
     return render_template("index.html", note_msg=msgmrkup, 
         file_path=[UPLOAD_FOLDER+f for f in filenames],scroll="contact")
 
@@ -108,7 +113,7 @@ def process_note(notetitle,ocr_text,files):
         tmp = notecontent[:limit]
         notecontent = tmp + "..."
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-    return note_msg
+    return note_msg, notecontent
         
 @app.route('/')
 def my_form():
@@ -151,10 +156,11 @@ def upload():
         except:
             return auth()
         files_to_attach=session['orig_filenames']
+        note_msg, notecontent = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
+        files_to_show=files_to_attach
         if DEBUG:
-            files_to_attach=session['contoured_imgs']
-        note_msg = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
-        return render_msg(files_to_attach, note_msg)
+            files_to_show=session['contoured_imgs']
+        return render_msg(files_to_attach, note_msg, tweet_text=notecontent)
         
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
@@ -173,8 +179,8 @@ def upload():
             session['ocr_text'] = ocr_text
             return auth()
         
-        note_msg = process_note('', ocr_text,files)
-        return render_msg(files, note_msg)
+        note_msg, notecontent = process_note('', ocr_text,files)
+        return render_msg(files, note_msg, tweet_text=notecontent)
         
     # elif request.form['btn'] == 'sample':
     #     filename = "highlight-sample_1.jpg"

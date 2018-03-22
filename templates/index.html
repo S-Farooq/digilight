@@ -182,8 +182,18 @@
               </div>
           {% if note_msg %}
           <div style="color:white !important;" class="col-lg-7 text-center">
+            <div class="row">
+              <div class="col-lg-12 text-center">
                 {{ note_msg }}
+              </div>
+              {% if tweet %}
+                <div class="clearfix"></div>
+                <div class="col-lg-12 text-center">
+                <a id="tweetbtn" value="tweetbtn" name="sharetweet" class="btn btn-primary text-uppercase" href='https://twitter.com/intent/tweet?text="{{ tweet }} via"&url=http://test.shaham.me'>Tweet</a>
                 </div>
+              {% endif %}
+            </div>
+          </div>
           {% else %}
           <div class="col-lg-7">
             <form method="POST" id="noteForm" name="sentMessage" novalidate>
@@ -281,7 +291,9 @@
       $.LoadingOverlay("show");
     };
 
-    $('.carousel').carousel();
+    $('.carousel').carousel(
+        interval: 2000
+      );
     </script>
 
 
