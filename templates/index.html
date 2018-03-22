@@ -133,6 +133,36 @@
  -->
      {% if file_path %}
     <section id="contact">
+
+    <div class="container">
+      <div class="row">
+        <h2>Media Slider Carousel BS3</h2>
+      </div>
+      <div class='row'>
+        <div class='col-md-8'>
+          <div class="carousel slide media-carousel" id="media">
+            <div class="carousel-inner">
+              <div class="item  active">
+                <div class="row">
+                  <div class="col-md-4">
+                    <a class="thumbnail" href="{{ url_for('static', filename=file_path) }}"><img alt="" 
+                    src="{{ url_for('static', filename=file_path) }}"></a>
+                  </div>
+                  <div class="col-md-4">
+                    <a class="thumbnail" href="{{ url_for('static', filename=file_path) }}"><img alt="" 
+                    src="{{ url_for('static', filename=file_path) }}"></a>
+                  </div>
+
+                </div>
+              </div>
+              
+            <a data-slide="prev" href="#media" class="left carousel-control">‹</a>
+            <a data-slide="next" href="#media" class="right carousel-control">›</a>
+          </div>                          
+        </div>
+      </div>
+    </div>
+
       <div class="container">
         <div class="row">
           <div class="col-lg-12 text-center">
@@ -140,11 +170,10 @@
           </div>
         </div>
         <div class="row">
-        <div class='col-lg-5'>
+        <div class='col-lg-1'>
+
         <a href="{{ url_for('static', filename=file_path) }}">
-               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;"  
-               src="{{ url_for('static', filename=file_path) }}"></a>
-               <a href="{{ url_for('static', filename=file_path) }}">
+               <a href="{{ url_for('static', filename=file_path) }}" target="_blank">
                <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;"  
                src="{{ url_for('static', filename=file_path) }}"></a>
                </div>
@@ -177,7 +206,7 @@
                   <div class="btn-group">
                     <button id="createnote" value="createnote" name="btn" class="btn btn-primary text-uppercase" type="submit">Create everNote</button>
                     <a id="tweetbtn" value="tweetbtn" name="sharetweet" class="btn btn-primary text-uppercase" 
-                    href='https://twitter.com/intent/tweet?text={{ output_print }}&url={{ url_for("static", filename=file_path) }}'>Tweet</a>
+                    href='https://twitter.com/intent/tweet?text="{{ output_print }} via"&url=http://test.shaham.me'>Tweet</a>
                 </div>
               </div>
             </form>
@@ -267,6 +296,13 @@
       }, 1000, "easeInOutExpo");
       // document.getElementById('{{ scroll }}').scrollIntoView();
       // document.location.hash = '#' + '{{ scroll }}';
+
+      $(document).ready(function() {
+        $('#media').carousel({
+          pause: true,
+          interval: false,
+        });
+      });
   </script>
   {% endif %}
 
