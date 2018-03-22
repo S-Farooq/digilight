@@ -65,12 +65,11 @@
           <div class="intro-lead-in">Digitize your Highlights.</div>
           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
           <div class="form-group row">
-          <div class="col-lg-8">
-              <input type="file" accept='image/*' class="form-control" id="images" name="images" onchange="" multiple>
+          <div class="col-lg-12">
+              <input style="width:100% !important" type="file" accept='image/*' class="form-control" id="images" name="images" onchange="" multiple>
             </div>
             <div class="col-lg-4">
-              <div class="input-group mb-2 mb-sm-0">
-              <div class="input-group-addon">Options</div>
+              <div class="input-group">
                 <select name="option" class="form-control" id="option">
                 <option value="highlighted_only" SELECTED>Highlighted Only</option>
                 <option value="all" SELECTED>All Text</option>
