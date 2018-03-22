@@ -75,7 +75,8 @@ def render_msg(filenames,msg, tweet_text=None):
 
 def render_result(filenames,result):
     return render_template("index.html", output_print=result, 
-            file_path=[UPLOAD_FOLDER+f for f in filenames],scroll="contact")
+            file_path=[UPLOAD_FOLDER+f for f in filenames],scroll="contact",
+            notetitle=session['notetitle'])
 
 
 def process_images(files, highlighted=True):
@@ -143,6 +144,9 @@ def upload():
     """
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
+        session['notetitle']= ''
+        if request.form['title']:
+            session['notetitle'] = request.form['title']
         if request.form['option']!='highlighted_only':
             highlighted=False
 
