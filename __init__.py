@@ -102,8 +102,9 @@ def process_note(notetitle,ocr_text,files):
     msg, notecontent = hili.create_note_from_highlight(access_token,file_list, 
         ocr_text.strip(), ocr=False, notetitle=notetitle)
 
-    if len(notecontent)>100:
-        tmp = notecontent[:100]
+    limit=500
+    if len(notecontent)>limit:
+        tmp = notecontent[:limit]
         notecontent = tmp + "..."
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
     return note_msg

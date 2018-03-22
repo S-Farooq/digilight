@@ -24,6 +24,7 @@
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/agency.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/loadingoverlay.min.js') }}"></script>
+    <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
 
     <script>
     function showLoad() {
@@ -169,7 +170,10 @@
                 <div class="clearfix"></div>
                 <div class="col-lg-12 text-center">
                   <div id="success"></div>
-                  <button id="createnote" value="createnote" name="btn" class="btn btn-primary btn-xl text-uppercase" type="submit">Create everNote</button>
+                  <div class="btn-group">
+                    <button id="createnote" value="createnote" name="btn" class="btn btn-primary text-uppercase" type="submit">Create everNote</button>
+                    <button id="tweetbtn" value="tweetbtn" name="sharetweet" class="btn btn-warning text-uppercase" 
+                    href='https://twitter.com/intent/tweet?text={{ output_print }}&url=http://test.shaham.me/'>Tweet</button>
                 </div>
               </div>
             </form>
