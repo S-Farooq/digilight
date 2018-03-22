@@ -113,6 +113,10 @@ def process_note(notetitle,ocr_text,files):
         tmp = notecontent[:limit]
         notecontent = tmp + "..."
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
+
+    notecontent.replace(";", "")
+    notecontent.replace(":", "")
+    notecontent.replace("&", "")
     return note_msg, notecontent
         
 @app.route('/')
@@ -158,8 +162,6 @@ def upload():
         files_to_attach=session['orig_filenames']
         note_msg, notecontent = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
         files_to_show=files_to_attach
-        if DEBUG:
-            files_to_show=session['contoured_imgs']
         return render_msg(files_to_attach, note_msg, tweet_text=notecontent)
         
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:

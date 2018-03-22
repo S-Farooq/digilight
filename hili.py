@@ -265,7 +265,7 @@ def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNote
 
     nBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
     nBody += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
-    nBody += "<en-note>%s" % noteBody
+    nBody += "<en-note>%s" % noteBody.replace("\n","<br />")
     if resources:
         ### Add Resource objects to note body
         nBody += "<br />" * 2
