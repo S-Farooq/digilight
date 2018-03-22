@@ -46,7 +46,7 @@ def convert_img_to_json(input_file):
 
     Args:
         input_file: a file object, containing lines of input to convert.
-        output_filename: the name of the file to output the json to.
+        output_json: the json request to send to API
     """
     request_list = []
     for line in input_file:
@@ -142,7 +142,7 @@ def expand_contour(cnt,expand_rate_x=1.1,expand_rate_y=1.05):
 
     return newcnt
 
-def contour_img(img_path,thresh=400,std_dev=7, hsv_lower=[22, 30, 30], hsv_upper=[45, 255, 255]):
+def contour_img(img_path,thresh=400,std_dev=4, hsv_lower=[22, 30, 30], hsv_upper=[45, 255, 255]):
     """Returns the name of the saved contour PNG image that will be sent for OCR thru API"""
     contoured_img = "contoured_"+os.path.basename(img_path).split(".")[0]+".png"
     image = cv2.imread(img_path)
@@ -213,9 +213,10 @@ def contour_img(img_path,thresh=400,std_dev=7, hsv_lower=[22, 30, 30], hsv_upper
     return contoured_img
     
 
-def google_ocr_img(img_path):
+def google_ocr_img(img_paths):
     """Sends DOCUMENT_TEXT_DETECTION API request with img file as content and return OCR result"""
-    data = convert_img_to_json([img_path+" 7:5"])
+    call_commands = [img_path+" 7:5" for img_path in img_paths]
+    data = convert_img_to_json(call_commands)
     useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
 
     response = requests.post(url="https://vision.googleapis.com/v1/images:annotate?key={key}".format(key=GOOGLE_API_KEY),
@@ -224,7 +225,7 @@ def google_ocr_img(img_path):
                 'User-Agent': useragent})
     api_result = response.json()
     all_texts = get_all_text(api_result) 
-    return api_result, "\n".join(all_texts)
+    return api_result, "\n--------------------\n".join(all_texts)
     
 
 def create_en_resource(file_list):

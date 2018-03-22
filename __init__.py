@@ -89,12 +89,15 @@ def process_images(files, highlighted=True):
         for filename in files:
             contoured_imgs.append(filename)
 
-    all_texts=[]
-    for image_file in contoured_imgs:
-        json_data, text =hili.google_ocr_img(UPLOAD_PATH+image_file)
-        all_texts.append(text)
+    # all_texts=[]
+    # for image_file in contoured_imgs:
+    #     json_data, text =hili.google_ocr_img(UPLOAD_PATH+image_file)
+    #     all_texts.append(text)
 
-    ocr_text = "\n---------------------\n".join(all_texts)
+    json_data, ocr_text =hili.google_ocr_img([UPLOAD_PATH+x for x in contoured_imgs])
+    # all_texts.append(text)
+
+    # ocr_text = "\n---------------------\n".join(all_texts)
     
     return contoured_imgs, ocr_text
 
@@ -140,6 +143,9 @@ def upload():
     """
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
+        if request.form.get('highlighted_check'):
+            highlighted=False
+            
         files=[]
         for f in request.files.getlist('images'):
             files.append(photos.save(f))
