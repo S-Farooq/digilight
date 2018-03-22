@@ -141,8 +141,12 @@
         </div>
         <div class="row">
         <div class='col-lg-5'>
-               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;" href="{{ url_for('static', filename=file_path) }}" 
-               src="{{ url_for('static', filename=file_path) }}">
+        <a href="{{ url_for('static', filename=file_path) }}">
+               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;"  
+               src="{{ url_for('static', filename=file_path) }}"></a>
+               <a href="{{ url_for('static', filename=file_path) }}">
+               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;"  
+               src="{{ url_for('static', filename=file_path) }}"></a>
                </div>
           {% if note_msg %}
           <div style="color:white !important;" class="col-lg-7 text-center">
@@ -173,7 +177,7 @@
                   <div class="btn-group">
                     <button id="createnote" value="createnote" name="btn" class="btn btn-primary text-uppercase" type="submit">Create everNote</button>
                     <a id="tweetbtn" value="tweetbtn" name="sharetweet" class="btn btn-primary text-uppercase" 
-                    href='https://twitter.com/intent/tweet?text={{ output_print }}&url=http://test.shaham.me/'>Tweet</a>
+                    href='https://twitter.com/intent/tweet?text={{ output_print }}&url={{ url_for("static", filename=file_path) }}'>Tweet</a>
                 </div>
               </div>
             </form>
