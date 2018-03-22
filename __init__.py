@@ -116,7 +116,7 @@ def upload():
         filename = photos.save(request.files['images'])
         files = [filename]
         session['orig_filenames']=files
-        contoured_imgs, ocr_text = process_image(files,highlighted=highlighted)
+        contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         if len(contoured_imgs)==0:
             return render_msg(files[0], "<h2>Sorry! Nothing detected, try another image</h2>")
         
@@ -140,7 +140,7 @@ def upload():
         highlighted=True
         filename = photos.save(request.files['images'])
         files = [filename]
-        contoured_imgs, ocr_text = process_image(files,highlighted=highlighted)
+        contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         if len(contoured_imgs)==0:
             return render_msg(files[0], "<h2>Sorry! Nothing detected, try another image</h2>")
         
