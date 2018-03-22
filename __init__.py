@@ -143,9 +143,9 @@ def upload():
     """
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
-        if request.form.get('highlighted_check'):
+        if request.form['option']!='highlighted_only':
             highlighted=False
-            
+
         files=[]
         for f in request.files.getlist('images'):
             files.append(photos.save(f))
