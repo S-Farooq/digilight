@@ -11,7 +11,7 @@
     <title>Digi-Light WebApp</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
 
     <!-- Custom fonts for this template -->
@@ -65,15 +65,23 @@
           <div class="intro-lead-in">Digitize your Highlights.</div>
           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
           <div class="form-group row">
-             <label class="col-sm-7 custom-file" for="images">
+             <label class="custom-file" for="images">
                   <input type="file" accept='image/*' class="custom-file-input" id="images" name="images" onchange="" multiple/>
-                  <!-- <span class="custom-file-control"></span> -->
+                  <span class="custom-file-control"></span>
                 </label>
+
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="highlighted_check" name="highlighted_check" value="checked" checked> 
+                    Highlighted Only
+                  </label>
+                </div>
+                <!-- 
                 <label class="col-sm-5 custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
                     <input type="checkbox" name="highlighted_check" class="custom-control-input" value="checked" checked>
-                    <!-- <span class="custom-control-indicator"></span> -->
+                    <span class="custom-control-indicator"></span>
                     <span class="custom-control-description">Highlighted Only</span>
-                  </label>
+                  </label> -->
                   <!-- <input type="file" accept='image/*' class="form-control" id="images" name="images" onchange="" multiple/> -->
 
               </div>

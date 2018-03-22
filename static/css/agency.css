@@ -704,3 +704,10 @@ ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons l
 .carousel-indicators .active {
   background-color: #444 !important;
 }
+
+.custom-file-control:before{
+  content: "Browse";
+}
+.custom-file-control:after{
+  content: "Choose files..";
+}
