@@ -332,7 +332,7 @@ def get_all_text(gcloud_data):
 
     return all_texts
 
-def create_note_from_highlight(authToken,image_files, all_texts, ocr=False, notetitle=''):
+def create_note_from_highlight(authToken,image_files, note_content, ocr=False, notetitle=''):
     from time import gmtime, strftime
 
     if notetitle=='':
@@ -345,7 +345,7 @@ def create_note_from_highlight(authToken,image_files, all_texts, ocr=False, note
             json_data, text =google_ocr_img(image_file)
             all_texts.append(text)
 
-    note_content = "\n---------------------\n".join(all_texts)
+        note_content = "\n---------------------\n".join(all_texts)
     # json_data=open("jsons/api_result.json").read()
 
     # data = json.loads(json_data)

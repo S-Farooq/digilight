@@ -101,6 +101,10 @@ def process_note(notetitle,ocr_text,files):
     
     msg, notecontent = hili.create_note_from_highlight(access_token,file_list, 
         ocr_text.strip(), ocr=False, notetitle=notetitle)
+
+    if len(notecontent)>100:
+        tmp = notecontent[:100]
+        notecontent = tmp + "..."
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
     return note_msg
         
@@ -111,6 +115,18 @@ def my_form():
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():
+    """
+    TEST CASES:
+    Digitize:
+        - fails to digitize reporting, no contour detected
+        - succeeds at digitizing
+    Createnote:
+        - Succeeds at note creation
+        - Attaches the right file
+        - shows the right msg afterwards
+    Quick note create btn:
+        - both of the above
+    """
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
         filename = photos.save(request.files['images'])
@@ -173,3 +189,4 @@ def upload():
 if __name__ == '__main__':
     app.run(debug=True, port=80)
     main()
+
