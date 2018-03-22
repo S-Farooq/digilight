@@ -85,7 +85,7 @@ def process_images(files, highlighted=True):
 
     all_texts=[]
     for image_file in contoured_imgs:
-        json_data, text =google_ocr_img(image_file)
+        json_data, text =hili.google_ocr_img(image_file)
         all_texts.append(text)
 
     ocr_text = "\n---------------------\n".join(all_texts)
