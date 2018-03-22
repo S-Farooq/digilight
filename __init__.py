@@ -176,9 +176,14 @@ def upload():
         
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:
         highlighted=True
+        if request.form['option']!='highlighted_only':
+            highlighted=False
+
+        notetitle = request.form['title']
         filename = photos.save(request.files['images'])
         files = [filename]
         contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
+
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
         
@@ -191,7 +196,7 @@ def upload():
             session['ocr_text'] = ocr_text
             return auth()
         
-        note_msg, notecontent = process_note('', ocr_text,files)
+        note_msg, notecontent = process_note(notetitle, ocr_text,files)
         return render_msg(files, note_msg, tweet_text=notecontent)
         
     # elif request.form['btn'] == 'sample':
