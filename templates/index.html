@@ -140,8 +140,8 @@
         </div>
         <div class="row">
         <div class='col-lg-5'>
-               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;" src="
-               {{ url_for('static', filename=file_path) }}">
+               <img class='img-responsive' style="width: 100%; height: auto; border:2px; border-color:white;" href="{{ url_for('static', filename=file_path) }}" 
+               src="{{ url_for('static', filename=file_path) }}">
                </div>
           {% if note_msg %}
           <div style="color:white !important;" class="col-lg-7 text-center">

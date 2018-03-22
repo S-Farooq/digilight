@@ -17,7 +17,7 @@ import numpy as np
 import os 
 main_path = os.path.dirname(os.path.realpath(__file__)) +"/"
 from config import GOOGLE_API_KEY
-from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET
+from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET, DEBUG
 
 DETECTION_TYPES = [
     'TYPE_UNSPECIFIED',
@@ -32,12 +32,12 @@ DETECTION_TYPES = [
 
 def get_evernote_client(token=None):
     if token:
-        return EvernoteClient(token=token, sandbox=True)
+        return EvernoteClient(token=token, sandbox=DEBUG)
     else:
         return EvernoteClient(
             consumer_key=EN_CONSUMER_KEY,
             consumer_secret=EN_CONSUMER_SECRET,
-            sandbox=True
+            sandbox=DEBUG
         )
 
 
@@ -224,31 +224,32 @@ def google_ocr_img(img_path):
                 'User-Agent': useragent})
     api_result = response.json()
     all_texts = get_all_text(api_result) 
-    return api_result, all_texts
+    return api_result, "\n".join(all_texts)
     
 
-def create_en_resource(filename):
-    # Calculate the md5 hash of the pdf
-    md5 = hashlib.md5()
-    with open(filename, "rb") as imageFile:
-        pdf_bytes = imageFile.read()
-    md5.update(pdf_bytes)
-    md5hash = md5.hexdigest()
-
-    # Create the Data type for evernote that goes into a resource
-    pdf_data = Types.Data()
-    pdf_data.bodyHash = md5hash
-    pdf_data.size = len(pdf_bytes)
-    pdf_data.body = pdf_bytes
-
-    # Create a resource for the note that contains the pdf
-    pdf_resource = Types.Resource()
-    pdf_resource.data = pdf_data
-    pdf_resource.mime = "image/jpg"
-
-    # Create a resource list to hold the pdf resource
+def create_en_resource(file_list):
     resource_list = []
-    resource_list.append(pdf_resource)
+    for filename in file_list:
+        # Calculate the md5 hash of the pdf
+        md5 = hashlib.md5()
+        with open(filename, "rb") as imageFile:
+            file_bytes = imageFile.read()
+        md5.update(file_bytes)
+        md5hash = md5.hexdigest()
+
+        # Create the Data type for evernote that goes into a resource
+        file_data = Types.Data()
+        file_data.bodyHash = md5hash
+        file_data.size = len(file_bytes)
+        file_data.body = file_bytes
+
+        # Create a resource for the note that contains the pdf
+        file_resource = Types.Resource()
+        file_resource.data = file_data
+        file_resource.mime = "image/jpg"
+
+        # Create a resource list to hold the pdf resource
+        resource_list.append(file_resource)
     return resource_list
 
 def makeNote(authToken, noteStore, noteTitle, noteBody, resources=[], parentNotebook=None):
@@ -331,7 +332,7 @@ def get_all_text(gcloud_data):
 
     return all_texts
 
-def create_note_from_highlight(authToken,image_file, all_texts, ocr=False, notetitle=''):
+def create_note_from_highlight(authToken,image_files, all_texts, ocr=False, notetitle=''):
     from time import gmtime, strftime
 
     if notetitle=='':
@@ -339,9 +340,12 @@ def create_note_from_highlight(authToken,image_file, all_texts, ocr=False, notet
         notetitle="digilight {curr_time}".format(curr_time=curr_time)
     
     if ocr:
-        json_data, all_texts =google_ocr_img(image_file)
+        all_texts=[]
+        for image_file in image_files:
+            json_data, text =google_ocr_img(image_file)
+            all_texts.append(text)
 
-    note_content = "\n\n".join(all_texts)
+    note_content = "\n---------------------\n".join(all_texts)
     # json_data=open("jsons/api_result.json").read()
 
     # data = json.loads(json_data)
@@ -367,7 +371,7 @@ def create_note_from_highlight(authToken,image_file, all_texts, ocr=False, notet
 
 
     try:
-        resources = create_en_resource(image_file)
+        resources = create_en_resource(image_files)
         note = makeNote(authToken, noteStore, notetitle, note_content,
                  parentNotebook=parentNotebook, resources=resources)
     except:

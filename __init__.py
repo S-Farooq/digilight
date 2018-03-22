@@ -10,7 +10,7 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES
 from evernote.api.client import EvernoteClient
 
 app = Flask(__name__)
-from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET
+from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET, DEBUG
 
 app.secret_key = SECRET_KEY
 #  Client Keys
@@ -56,21 +56,54 @@ def callback():
         )
         session['access_token']=access_token
     except KeyError:
-        contoured_img = session['filename']
-        return render_template("index.html", note_msg=Markup("<h2>ERROR: Couldn't authenticate your account...</h2>"),
-         file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+        files = session['orig_filenames']
+        return render_msg(files[0], "<h2>ERROR: Couldn't authenticate your account...</h2>")
 
-    contoured_img = session['filename']
-    notetitle = session['notetitle']
-    ocr_text = session['ocr_text']
-    file_path = UPLOAD_PATH+session['orig_filename']
-    msg, notecontent = hili.create_note_from_highlight(access_token,file_path, 
-        [ocr_text.strip()], ocr=False, notetitle=notetitle)
+    files_to_attach=session['orig_filenames']
+    note_msg = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
+    return render_msg(UPLOAD_FOLDER+files_to_attach[0], note_msg)
+    
+def render_msg(filename,msg):
+    msgmrkup=Markup(msg)
+    return render_template("index.html", note_msg=msgmrkup, file_path=UPLOAD_FOLDER+filename,scroll="contact")
+
+def render_result(filename,result):
+    return render_template("index.html", output_print=result, 
+            file_path=UPLOAD_FOLDER+filename,scroll="contact")
+
+
+def process_images(files, highlighted=True):
+    contoured_imgs = []
+    if highlighted:
+        for filename in files:
+            contoured_img = hili.contour_img(UPLOAD_PATH+filename)
+            if contoured_img:
+                contoured_imgs.append(contoured_img)
+    else:
+        for filename in files:
+            contoured_imgs.append(filename)
+
+    all_texts=[]
+    for image_file in contoured_imgs:
+        json_data, text =google_ocr_img(image_file)
+        all_texts.append(text)
+
+    ocr_text = "\n---------------------\n".join(all_texts)
+    
+    return contoured_imgs, ocr_text
+
+
+def process_note(notetitle,ocr_text,files):
+    file_list = []
+    for f in files:
+        file_list.append(UPLOAD_PATH+f)
+    access_token = session['access_token']
+    
+    msg, notecontent = hili.create_note_from_highlight(access_token,file_list, 
+        ocr_text.strip(), ocr=False, notetitle=notetitle)
     note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-    note_msg=Markup(note_msg)
-    return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")    
-    # return redirect(url_for('.my_form'))
-
+    return note_msg
+        
 @app.route('/')
 def my_form():
     # session.clear()
@@ -79,66 +112,61 @@ def my_form():
 @app.route('/', methods=['GET', 'POST'])
 def upload():
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
+        highlighted=True
         filename = photos.save(request.files['images'])
-        contoured_img = hili.contour_img(UPLOAD_PATH+filename)
-        if not contoured_img:
-            msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
-            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
-        # try:
-        api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
-        # except:
-        #     msg=Markup("<h2>Sorry! Could not get any text from the countoured image.. try another image.</h2>")
-        #     return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+        files = [filename]
+        session['orig_filenames']=files
+        contoured_imgs, ocr_text = process_image(files,highlighted=highlighted)
+        if len(contoured_imgs)==0:
+            return render_msg(files[0], "<h2>Sorry! Nothing detected, try another image</h2>")
         
-        session['filename']=contoured_img
-        session['orig_filename']=filename
-        return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+        session['contoured_imgs']=contoured_imgs
+        return render_result(contoured_imgs[0],ocr_text)
+        
     elif request.form['btn'] == 'createnote':
-        contoured_img = session['filename']
-        file_path = UPLOAD_PATH+session['orig_filename']
-        notetitle = request.form['title']
-        ocr_text = request.form['content']
-        session['notetitle'] = notetitle
-        session['ocr_text'] = ocr_text
+        session['notetitle'] = request.form['title']
+        session['ocr_text'] = request.form['content']
         try:
             access_token = session['access_token']
         except:
             return auth()
-        msg, notecontent = hili.create_note_from_highlight(access_token,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
-        note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-        note_msg=Markup(note_msg)
-        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
-
+        files_to_attach=session['orig_filenames']
+        if DEBUG:
+            files_to_attach=session['contoured_imgs']
+        note_msg = process_note(session['notetitle'], session['ocr_text'],files_to_attach)
+        return render_msg(files_to_attach[0], note_msg)
+        
     elif request.form['btn'] == 'lucky' and request.method == 'POST' and 'images' in request.files:
+        highlighted=True
         filename = photos.save(request.files['images'])
-        contoured_img = hili.contour_img(UPLOAD_PATH+filename)
-        if not contoured_img:
-            msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
-            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
-        api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
-
-        file_path = UPLOAD_PATH+filename
-        notetitle = ''
-        ocr_text = "\n".join(ocr_texts)
+        files = [filename]
+        contoured_imgs, ocr_text = process_image(files,highlighted=highlighted)
+        if len(contoured_imgs)==0:
+            return render_msg(files[0], "<h2>Sorry! Nothing detected, try another image</h2>")
+        
         try:
             access_token = session['access_token']
         except:
+            session['orig_filenames']=files
+            session['contoured_imgs']=contoured_imgs
+            session['notetitle'] = ''
+            session['ocr_text'] = ocr_text
             return auth()
-        msg, notecontent = hili.create_note_from_highlight(access_token,file_path, [ocr_text.strip()], ocr=False, notetitle=notetitle)
-        note_msg="<h2>{msg}</h2><p>{notecontent}</p>".format(msg=msg,notecontent=notecontent)
-        note_msg=Markup(note_msg)
-        return render_template("index.html", note_msg=note_msg, file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
-    elif request.form['btn'] == 'sample':
-        filename = "highlight-sample_1.jpg"
-        contoured_img = hili.contour_img(UPLOAD_PATH+filename)
-        if not contoured_img:
-            msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
-            return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
-        api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
+        
+        note_msg = process_note('', ocr_text,files)
+        return render_msg(files[0], note_msg)
+        
+    # elif request.form['btn'] == 'sample':
+    #     filename = "highlight-sample_1.jpg"
+    #     contoured_img = hili.contour_img(UPLOAD_PATH+filename)
+    #     if not contoured_img:
+    #         msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
+    #         return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
+    #     api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
 
-        session['filename']=contoured_img
-        session['orig_filename']=filename
-        return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
+    #     session['filename']=contoured_img
+    #     session['orig_filename']=filename
+    #     return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     else:
         return render_template('index.html')
 
