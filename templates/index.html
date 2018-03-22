@@ -65,13 +65,17 @@
           <div class="intro-lead-in">Digitize your Highlights.</div>
           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
           <div class="form-group row">
+          <div class="col-sm-7">
               <input type="file" accept='image/*' class="form-control" id="images" name="images" onchange="" multiple/>
-                <div class="form-check form-check-inline">
+              </div>
+              <div class="col-sm-5">
+                <div class="form-check">
                   <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" id="highlighted_check" name="highlighted_check" value="checked" checked> 
                     Highlighted Only
                   </label>
                 </div>
+              </div>
                 <!-- 
                 <label class="col-sm-5 custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
                     <input type="checkbox" name="highlighted_check" class="custom-control-input" value="checked" checked>
