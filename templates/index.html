@@ -64,16 +64,12 @@
         <div class="intro-text">
           <div class="intro-lead-in">Digitize your Highlights.</div>
           <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
-          <div class="row">
-             
-              <div class="col-md-7">
-              <label class="custom-file">
+          <div class="form-group row">
+             <label class="col-sm-7 custom-file" for="images">
                   <input type="file" accept='image/*' class="custom-file-input" id="images" name="images" onchange="" multiple/>
                   <span class="custom-file-control"></span>
                 </label>
-                </div>
-                <div class="col-md-5">
-                <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                <label class="col-sm-5 custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
                     <input type="checkbox" name="highlighted_check" class="custom-control-input" value="checked" checked>
                     <span class="custom-control-indicator"></span>
                     <span class="custom-control-description">Highlighted Only</span>
@@ -82,8 +78,7 @@
 
               </div>
 
-              </div>
-            <div class="row">
+            <div class="form-group row">
               <div class="col-lg-12">
                 <div class="btn-group">
                   <button id="submitbtn" name="btn" value="submitbtn" class="btn btn-primary text-uppercase" type="submit">Digitize</button>
