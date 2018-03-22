@@ -146,7 +146,7 @@
                
                         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                           <ol class="carousel-indicators">
-                          {% for f in range(len(file_path)) %}
+                          {% for f in range(file_path|length) %}
                             <li data-target="#carousel-example-generic" data-slide-to="{{ f }}" class="active"></li>
                           {% endfor %}
                             <!-- <li data-target="#carousel-example-generic" data-slide-to="1"></li> -->
