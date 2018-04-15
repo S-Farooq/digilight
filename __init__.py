@@ -92,15 +92,15 @@ def process_images(files, highlighted=True, pre_contour=False):
 
     
     json_data =hili.google_ocr_img([UPLOAD_PATH+x for x in contoured_imgs])
-    list_of_word_obj = get_word_objs(json_data)
+    list_of_word_obj = hili.get_word_objs(json_data)
     if highlighted:
-        all_ocr_text, contoured_imgs = get_post_ocr_contour_text(
+        all_ocr_text, contoured_imgs = hili.get_post_ocr_contour_text(
             [UPLOAD_PATH+x for x in files], 
             list_of_word_obj,
             word_sel_thres = 5, 
             hili_to_word_ratio=0.5)
     else:
-        all_ocr_text = get_all_text(json_data)
+        all_ocr_text = hili.get_all_text(json_data)
     
     ocr_text = "\n---------------------\n".join(all_ocr_text)
     
