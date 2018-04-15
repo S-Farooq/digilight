@@ -333,7 +333,7 @@ def get_post_ocr_contour_text(images, list_of_word_objects,
                     cv2.drawContours(image, [box_points], 0, (0, 0, 50), 1)
             except:
                 continue
-                
+
         if len(hili_text)==0:
             continue        
         contoured_img = "poc_"+os.path.basename(img_path).split(".")[0]+".png"
@@ -506,4 +506,21 @@ def create_note_from_highlight(authToken,image_files, note_content, ocr=False, n
 if __name__ == '__main__':
     img_path = "sample_images/highlight-sample2.jpg"
     c = contour_img(img_path, thresh=100, std_dev=7, hsv_lower=[22, 30, 30], hsv_upper=[45, 255, 255])
-    print "Done:",c
+    print "Done PRE Contouring:",c
+    
+    json_data =google_ocr_img([img_path])
+    print "API CALL # of responses:", len(json_data['responses'])
+    
+    list_of_word_obj = get_word_objs(json_data)
+    print "# of Word Objects:", len(list_of_word_obj)
+    
+    all_ocr_text, contoured_imgs = get_post_ocr_contour_text(
+        [img_path], 
+        list_of_word_obj,
+        word_sel_thres = 5, 
+        hili_to_word_ratio=0.5)
+    
+    ocr_text = "\n---------------------\n".join(all_texts)
+    
+    print "FINAL OCR test after POST Contouring:"
+    print ocr_text

@@ -159,7 +159,11 @@ def upload():
             files.append(photos.save(f))
         # files = [filename]
         session['orig_filenames']=files
-        contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
+        try:
+            contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
+        except:
+            return render_msg(files, "<h2>Sorry! API process failed, contact server admin.</h2>")
+        
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
         
@@ -188,9 +192,12 @@ def upload():
         files=[]
         for f in request.files.getlist('images'):
             files.append(photos.save(f))
-            
-        contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
-
+        
+        try:
+            contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
+        except:
+            return render_msg(files, "<h2>Sorry! API process failed, contact server admin.</h2>")
+        
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
         
