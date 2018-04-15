@@ -504,7 +504,7 @@ def create_note_from_highlight(authToken,image_files, note_content, ocr=False, n
     return msg, note_content
 
 if __name__ == '__main__':
-    img_path = "sample_images/highlight-sample2.jpg"
+    img_path = "sample_images/highlight-sample.jpg"
     c = contour_img(img_path, thresh=100, std_dev=7, hsv_lower=[22, 30, 30], hsv_upper=[45, 255, 255])
     print "Done PRE Contouring:",c
     
