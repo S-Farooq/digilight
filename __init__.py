@@ -102,7 +102,7 @@ def process_images(files, highlighted=True, pre_contour=False):
     else:
         all_ocr_text = get_all_text(json_data)
     
-    ocr_text = "\n---------------------\n".join(all_texts)
+    ocr_text = "\n---------------------\n".join(all_ocr_text)
     
     return contoured_imgs, ocr_text
 
@@ -161,8 +161,9 @@ def upload():
         session['orig_filenames']=files
         try:
             contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
-        except:
-            return render_msg(files, "<h2>Sorry! API process failed, contact server admin.</h2>")
+        except Exception as e:
+            return render_msg(files, 
+                "<h2>Sorry! API process failed, contact server admin. {e}</h2>".format(str(e)))
         
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
@@ -195,8 +196,9 @@ def upload():
         
         try:
             contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
-        except:
-            return render_msg(files, "<h2>Sorry! API process failed, contact server admin.</h2>")
+        except Exception as e:
+            return render_msg(files, 
+                "<h2>Sorry! API process failed, contact server admin. {e}</h2>".format(str(e)))
         
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")

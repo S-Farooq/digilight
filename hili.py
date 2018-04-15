@@ -520,7 +520,7 @@ if __name__ == '__main__':
         word_sel_thres = 5, 
         hili_to_word_ratio=0.5)
     
-    ocr_text = "\n---------------------\n".join(all_texts)
+    ocr_text = "\n---------------------\n".join(all_ocr_text)
     
     print "FINAL OCR test after POST Contouring:"
     print ocr_text
