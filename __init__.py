@@ -98,7 +98,7 @@ def process_images(files, highlighted=True, pre_contour=False):
             [UPLOAD_PATH+x for x in files], 
             list_of_word_obj,
             word_sel_thres = 5, 
-            hili_to_word_ratio=0.5)
+            hili_to_word_ratio=0.65)
     else:
         all_ocr_text = hili.get_all_text(json_data)
     
