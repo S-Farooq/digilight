@@ -163,7 +163,7 @@ def upload():
             contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         except Exception as e:
             return render_msg(files, 
-                "<h2>Sorry! API process failed, contact server admin. {e}</h2>".format(str(e)))
+                "<h2>Sorry! API process failed, contact server admin. {e}</h2>".format(e=str(e)))
         
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
@@ -198,7 +198,7 @@ def upload():
             contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
         except Exception as e:
             return render_msg(files, 
-                "<h2>Sorry! API process failed, contact server admin. {e}</h2>".format(str(e)))
+                "<h2>Sorry! API process failed, contact server admin. {e}</h2>".format(e=str(e)))
         
         if len(contoured_imgs)==0:
             return render_msg(files, "<h2>Sorry! Nothing detected, try another image</h2>")
