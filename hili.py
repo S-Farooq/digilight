@@ -224,9 +224,131 @@ def google_ocr_img(img_paths):
         headers={'Content-Type': 'application/json',
                 'User-Agent': useragent})
     api_result = response.json()
-    all_texts = get_all_text(api_result) 
-    return api_result, "\n--------------------\n".join(all_texts)
+    try:
+        res = api_res['responses'][0]
+    except:
+        raise Exception("Looks like API call failed..contact server admin.")
+    return api_result
+
+def get_word_objs(api_result):
+    list_of_word_obj = []
+    for res in api_result['responses']:
+        txt_ann = res['textAnnotations']
+        word_objects = []
+        for x in range(len(txt_ann)):
+            obj = txt_ann[x]
+            if ' ' not in obj['description']:
+                word_objects.append(obj)
+
+        print "TOTAL WORDS OCR-ed:", len(word_objects)
+        list_of_word_obj.append(word_objects)
+    return list_of_word_obj
+
+def get_frame_threshold(image, hsv_lower=[22, 30, 30],hsv_upper=[45, 255, 255]):
+    hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     
+    HSV_lower = np.array(hsv_lower, np.uint8)  # Lower HSV value
+    HSV_upper = np.array(hsv_upper, np.uint8)  # Upper HSV value
+
+    frame_threshed = cv2.inRange(hsv_img, HSV_lower, HSV_upper)
+    return frame_threshed
+
+def swap_on_intersect(mask1, mask2, threshold=0.2):
+    intersectarea = np.sum(mask1[mask2==255])/255
+    area1 = np.sum(mask1)/255
+    area2 = np.sum(mask2)/255
+    if intersectarea>threshold*area1 or intersectarea>threshold*area2:
+        print "AREA1:", area1, "AREA2:", area2, "INTERSECT_AREA:", intersectarea
+        if area2<area1:
+            return True, False
+        else:
+            return True, True
+    return False, False
+
+def get_post_ocr_contour_text(images, list_of_word_objects,
+    word_sel_thres = 5, hili_to_word_ratio=0.5):
+    assert(len(images)==len(list_of_word_objects))
+    all_ocr_text = []
+    all_contoured_imgs = []
+    for imgnum in range(len(images)):
+        img_path = images[imgnum]
+        image = cv2.imread(img_path)
+        frame_threshed = get_frame_threshold(image)
+        word_objects = list_of_word_objects[imgnum]
+        if len(word_objects)==0:
+            continue
+
+        selected_obj = []
+        hili_text = []
+        
+        for x in range(len(word_objects[:])):
+            obj=word_objects[x]
+            word_objects[x]['sel'] = False
+            try:
+                bounding_box = obj['boundingPoly']
+                box_points = [(p['x'],p['y']) for p in bounding_box['vertices'] ]
+                box_points = np.array(box_points)
+            except:
+                continue
+        
+            mask = np.zeros((image.shape[0], image.shape[1]))
+            cv2.fillConvexPoly(mask, box_points, (255, 255, 255))
+            word_objects[x]['polymask'] = mask
+        
+            avg = np.sum(frame_threshed[mask==255])/255.0
+            mask_area = np.sum(mask)/255.0
+            
+            if avg>hili_to_word_ratio*mask_area:
+                #check if the mask intersects with other masks
+                intersect_flag=False
+                for y in selected_obj:
+                    if abs(x-y)==1 or abs(x-y)>15:
+                        continue
+                    res, swap = swap_on_intersect(mask, word_objects[y]['polymask'], threshold=0.2)
+                    if res:
+                        intersect_flag=True
+                        if len(word_objects[y]['description'])<len(word_objects[x]['description']):
+                            word_objects[y]['description'] = word_objects[x]['description'] 
+                        break
+                if intersect_flag:
+                    continue
+       
+                word_objects[x]['sel'] = True
+                selected_obj.append(x)
+                look_back = max(x-word_sel_thres,0)
+                if word_objects[look_back]['sel']:
+                    for i in range(look_back+1,x):
+                        if not word_objects[i]['sel']:
+                            word_objects[i]['sel']=True
+                            selected_obj.append(i)
+                
+        #second round to
+        for obj in word_objects:
+            try:
+                if obj['sel']:
+                    bounding_box = obj['boundingPoly']
+                    box_points = [(p['x'],p['y']) for p in bounding_box['vertices'] ]
+                    box_points = np.array(box_points)
+                    hili_text.append(obj['description'])
+                    cv2.drawContours(image, [box_points], 0, (0, 0, 50), 1)
+            except:
+                continue
+                
+        if len(hili_text)==0:
+            continue        
+        contoured_img = "poc_"+os.path.basename(img_path).split(".")[0]+".png"
+        all_contoured_imgs.append(contoured_img)
+        cv2.imwrite(main_path+"static/uploads/"+contoured_img,image)
+        
+        ocr_text = [hili_text[0]]
+        for w in hili_text[1:]:
+            if w not in ['?','.',',',':',';','(',')',"'",'"',"-","_"]:
+                ocr_text.append(" "+w)
+            else:
+                ocr_text.append(w)
+        
+        all_ocr_text.append(ocr_text)
+    return all_ocr_text, all_contoured_imgs
 
 def create_en_resource(file_list):
     resource_list = []

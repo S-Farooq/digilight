@@ -79,9 +79,9 @@ def render_result(filenames,result):
             notetitle=session['notetitle'])
 
 
-def process_images(files, highlighted=True):
+def process_images(files, highlighted=True, pre_contour=False):
     contoured_imgs = []
-    if highlighted:
+    if pre_contour:
         for filename in files:
             contoured_img = hili.contour_img(UPLOAD_PATH+filename)
             if contoured_img:
@@ -90,15 +90,19 @@ def process_images(files, highlighted=True):
         for filename in files:
             contoured_imgs.append(filename)
 
-    # all_texts=[]
-    # for image_file in contoured_imgs:
-    #     json_data, text =hili.google_ocr_img(UPLOAD_PATH+image_file)
-    #     all_texts.append(text)
-
-    json_data, ocr_text =hili.google_ocr_img([UPLOAD_PATH+x for x in contoured_imgs])
-    # all_texts.append(text)
-
-    # ocr_text = "\n---------------------\n".join(all_texts)
+    
+    json_data =hili.google_ocr_img([UPLOAD_PATH+x for x in contoured_imgs])
+    list_of_word_obj = get_word_objs(json_data)
+    if highlighted:
+        all_ocr_text, contoured_imgs = get_post_ocr_contour_text(
+            [UPLOAD_PATH+x for x in files], 
+            list_of_word_obj,
+            word_sel_thres = 5, 
+            hili_to_word_ratio=0.5)
+    else:
+        all_ocr_text = get_all_text(json_data)
+    
+    ocr_text = "\n---------------------\n".join(all_texts)
     
     return contoured_imgs, ocr_text
 
@@ -202,17 +206,6 @@ def upload():
         note_msg, notecontent = process_note(notetitle, ocr_text,files)
         return render_msg(files, note_msg, tweet_text=notecontent)
         
-    # elif request.form['btn'] == 'sample':
-    #     filename = "highlight-sample_1.jpg"
-    #     contoured_img = hili.contour_img(UPLOAD_PATH+filename)
-    #     if not contoured_img:
-    #         msg=Markup("<h2>Sorry! Nothing detected, try another image</h2>")
-    #         return render_template("index.html", note_msg=msg, file_path=str(UPLOAD_FOLDER+filename),scroll="contact")
-    #     api_res, ocr_texts = hili.google_ocr_img(UPLOAD_PATH+contoured_img)
-
-    #     session['filename']=contoured_img
-    #     session['orig_filename']=filename
-    #     return render_template("index.html", output_print="\n".join(ocr_texts), file_path=str(UPLOAD_FOLDER+contoured_img),scroll="contact")
     else:
         return render_template('index.html')
 
