@@ -225,7 +225,7 @@ def google_ocr_img(img_paths):
                 'User-Agent': useragent})
     api_result = response.json()
     try:
-        res = api_res['responses'][0]
+        res = api_result['responses']
     except:
         raise Exception("Looks like API call failed..contact server admin.")
     return api_result
