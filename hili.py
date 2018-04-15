@@ -347,7 +347,7 @@ def get_post_ocr_contour_text(images, list_of_word_objects,
             else:
                 ocr_text.append(w)
         
-        all_ocr_text.append(ocr_text)
+        all_ocr_text.append("".join(ocr_text))
     return all_ocr_text, all_contoured_imgs
 
 def create_en_resource(file_list):
