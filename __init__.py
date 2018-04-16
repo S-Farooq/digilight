@@ -27,7 +27,7 @@ UPLOAD_PATH = '/var/www/Digilight/digilight/static/'+UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_PATH
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_PATH
 configure_uploads(app, photos)
 
@@ -146,7 +146,9 @@ def upload():
     Quick note create btn:
         - both of the above
     """
+
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
+        session.clear()
         highlighted=True
         session['notetitle']= ''
         if request.form['title']:
@@ -219,6 +221,6 @@ def upload():
         return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=80)
+    app.run(debug=True, port=80, threaded=True)
     main()
 
