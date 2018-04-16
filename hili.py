@@ -498,12 +498,12 @@ def create_note_from_highlight(authToken,image_files, note_content, ocr=False, n
     try:
         resources = create_en_resource(image_files)
     except Exception as e:
-        return "ERROR: Couldnt make evernote resource.", note_content, str(eobject)
+        return "ERROR: Couldnt make evernote resource."+ str(e), note_content
     try:
         note = makeNote(authToken, noteStore, notetitle, note_content,
                  parentNotebook=parentNotebook, resources=resources)
     except Exception as e:
-        return "ERROR: Couldnt make evernote.", note_content, str(e)
+        return "ERROR: Couldnt make evernote."+ str(e), note_content
     
     msg = note.title + " created in " + parentNotebook.name + "!"
     return msg, note_content
