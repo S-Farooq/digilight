@@ -2,13 +2,15 @@
 
 from flask import Flask, request, redirect, g, render_template, Markup, session, url_for
 import sys, os
+
+import time 
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
 
 import hili as hili
 from werkzeug.utils import secure_filename
 
-from flask_uploads import UploadSet, configure_uploads, IMAGES
+# from flask_uploads import UploadSet, configure_uploads, IMAGES
 from evernote.api.client import EvernoteClient
 
 app = Flask(__name__)
@@ -22,7 +24,7 @@ CLIENT_SIDE_URL = "http://test.shaham.me"
 REDIRECT_URI = "{}/callback/q".format(CLIENT_SIDE_URL)
 
 
-photos = UploadSet('photos', IMAGES)
+# photos = UploadSet('photos', IMAGES)
 
 UPLOAD_FOLDER = 'uploads/'
 UPLOAD_PATH = '/var/www/Digilight/digilight/static/'+UPLOAD_FOLDER
@@ -31,7 +33,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_PATH
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_PATH
-configure_uploads(app, photos)
+# configure_uploads(app, photos)
 
 from flask import send_from_directory
 
@@ -109,7 +111,8 @@ def process_images(files, highlighted=True, pre_contour=False):
             [UPLOAD_PATH+x for x in files], 
             list_of_word_obj,
             word_sel_thres = 5, 
-            hili_to_word_ratio=0.65)
+            hili_to_word_ratio=0.65,
+            check_for_intersections=False)
     else:
         all_ocr_text = hili.get_all_text(json_data)
     del list_of_word_obj
@@ -214,8 +217,15 @@ def upload():
         notetitle = request.form['title']
 
         files=[]
-        for f in request.files.getlist('images'):
-            files.append(photos.save(f))
+        try:
+            for f in request.files.getlist('images'):
+                if f and allowed_file(f.filename):
+                    filename = secure_filename(f.filename)
+                    f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    files.append(filename)
+        except Exception as e:
+            return render_msg(files, 
+                "<h2>Sorry! File Upload failed.., contact server admin. {e}</h2>".format(e=str(e)))
         
         try:
             contoured_imgs, ocr_text = process_images(files,highlighted=highlighted)
