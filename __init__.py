@@ -2,10 +2,12 @@
 
 from flask import Flask, request, redirect, g, render_template, Markup, session, url_for
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 import hili as hili
+from werkzeug.utils import secure_filename
+
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from evernote.api.client import EvernoteClient
 
@@ -24,13 +26,22 @@ photos = UploadSet('photos', IMAGES)
 
 UPLOAD_FOLDER = 'uploads/'
 UPLOAD_PATH = '/var/www/Digilight/digilight/static/'+UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_PATH
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 app.config['UPLOADED_PHOTOS_DEST'] = UPLOAD_PATH
 configure_uploads(app, photos)
 
+from flask import send_from_directory
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def auth():
     client = hili.get_evernote_client()
@@ -132,7 +143,7 @@ def my_form():
     # session.clear()
     return render_template('index.html')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
     """
     TEST CASES:
@@ -157,8 +168,12 @@ def upload():
             highlighted=False
 
         files=[]
+
         for f in request.files.getlist('images'):
-            files.append(photos.save(f))
+            if f and allowed_file(f.filename):
+                filename = secure_filename(f.filename)
+                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                files.append(filename)
         # files = [filename]
         session['orig_filenames']=files
         try:
