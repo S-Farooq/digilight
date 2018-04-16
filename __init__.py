@@ -1,7 +1,7 @@
 
 
 from flask import Flask, request, redirect, g, render_template, Markup, session, url_for
-import sys
+import sys, os
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
 
@@ -113,7 +113,7 @@ def process_images(files, highlighted=True, pre_contour=False):
     else:
         all_ocr_text = hili.get_all_text(json_data)
     del list_of_word_obj
-    
+
     ocr_text = "\n---------------------\n".join(all_ocr_text)
     
     return contoured_imgs, ocr_text
@@ -170,11 +170,16 @@ def upload():
 
         files=[]
 
-        for f in request.files.getlist('images'):
-            if f and allowed_file(f.filename):
-                filename = secure_filename(f.filename)
-                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                files.append(filename)
+        try:
+            for f in request.files.getlist('images'):
+                if f and allowed_file(f.filename):
+                    filename = secure_filename(f.filename)
+                    f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    files.append(filename)
+        except Exception as e:
+            return render_msg(files, 
+                "<h2>Sorry! File Upload failed.., contact server admin. {e}</h2>".format(e=str(e)))
+        
         # files = [filename]
         session['orig_filenames']=files
         try:
