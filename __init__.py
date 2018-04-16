@@ -112,6 +112,7 @@ def process_images(files, highlighted=True, pre_contour=False):
             hili_to_word_ratio=0.65)
     else:
         all_ocr_text = hili.get_all_text(json_data)
+    del list_of_word_obj
     
     ocr_text = "\n---------------------\n".join(all_ocr_text)
     
