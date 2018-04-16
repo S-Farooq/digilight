@@ -293,7 +293,8 @@ def get_post_ocr_contour_text(images, list_of_word_objects,
         
             mask = np.zeros((image.shape[0], image.shape[1]))
             cv2.fillConvexPoly(mask, box_points, (255, 255, 255))
-            word_objects[x]['polymask'] = mask
+            if check_for_intersections:
+                word_objects[x]['polymask'] = mask
         
             avg = np.sum(frame_threshed[mask==255])/255.0
             mask_area = np.sum(mask)/255.0
