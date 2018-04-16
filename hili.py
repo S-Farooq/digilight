@@ -373,7 +373,7 @@ def create_en_resource(file_list):
         # Create a resource for the note that contains the pdf
         file_resource = Types.Resource()
         file_resource.data = file_data
-        file_resource.mime = "image/jpg"
+        file_resource.mime = "image/"+ os.path.basename(img_path).split(".")[1]
 
         # Create a resource list to hold the pdf resource
         resource_list.append(file_resource)
