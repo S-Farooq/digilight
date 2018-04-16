@@ -17,6 +17,7 @@ app = Flask(__name__)
 from config import SECRET_KEY, EVERNOTE_DEV_TOKEN, EN_CONSUMER_KEY, EN_CONSUMER_SECRET, DEBUG
 
 app.secret_key = SECRET_KEY
+app.debug = True
 #  Client Keys
 
 # Server-side Parameters
@@ -163,7 +164,7 @@ def upload():
     """
 
     if request.form['btn'] == 'submitbtn' and request.method == 'POST' and 'images' in request.files:
-        session.clear()
+        # session.clear()
         highlighted=True
         session['notetitle']= ''
         if request.form['title']:

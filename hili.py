@@ -498,6 +498,7 @@ def create_note_from_highlight(authToken,image_files, note_content, ocr=False, n
 
 
     try:
+        print "FILES TO RESOURCE:", str(image_files)
         resources = create_en_resource(image_files)
     except Exception as e:
         return "ERROR: Couldnt make evernote resource."+ str(e), note_content
