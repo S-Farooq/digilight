@@ -266,7 +266,7 @@ def swap_on_intersect(mask1, mask2, threshold=0.2):
     return False, False
 
 def get_post_ocr_contour_text(images, list_of_word_objects,
-    word_sel_thres = 5, hili_to_word_ratio=0.5):
+    word_sel_thres = 5, hili_to_word_ratio=0.5, check_for_intersections=False):
     assert(len(images)==len(list_of_word_objects))
     all_ocr_text = []
     all_contoured_imgs = []
@@ -300,18 +300,19 @@ def get_post_ocr_contour_text(images, list_of_word_objects,
             
             if avg>hili_to_word_ratio*mask_area:
                 #check if the mask intersects with other masks
-                intersect_flag=False
-                for y in selected_obj:
-                    if abs(x-y)==1 or abs(x-y)>15:
+                if check_for_intersections:
+                    intersect_flag=False
+                    for y in selected_obj:
+                        if abs(x-y)==1 or abs(x-y)>15:
+                            continue
+                        res, swap = swap_on_intersect(mask, word_objects[y]['polymask'], threshold=0.2)
+                        if res:
+                            intersect_flag=True
+                            if len(word_objects[y]['description'])<len(word_objects[x]['description']):
+                                word_objects[y]['description'] = word_objects[x]['description'] 
+                            break
+                    if intersect_flag:
                         continue
-                    res, swap = swap_on_intersect(mask, word_objects[y]['polymask'], threshold=0.2)
-                    if res:
-                        intersect_flag=True
-                        if len(word_objects[y]['description'])<len(word_objects[x]['description']):
-                            word_objects[y]['description'] = word_objects[x]['description'] 
-                        break
-                if intersect_flag:
-                    continue
        
                 word_objects[x]['sel'] = True
                 selected_obj.append(x)
