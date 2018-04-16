@@ -9,7 +9,6 @@ import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 
 import requests
-
 from PIL import Image
 import cv2
 import numpy as np
@@ -30,6 +29,7 @@ DETECTION_TYPES = [
     'DOCUMENT_TEXT_DETECTION'
 ]
 
+print "IMPORTED ALL MODULES..."
 def get_evernote_client(token=None):
     if token:
         return EvernoteClient(token=token, sandbox=DEBUG)
@@ -373,7 +373,7 @@ def create_en_resource(file_list):
         # Create a resource for the note that contains the pdf
         file_resource = Types.Resource()
         file_resource.data = file_data
-        file_resource.mime = "image/"+ os.path.basename(img_path).split(".")[1]
+        file_resource.mime = "image/"+ os.path.basename(filename).split(".")[1]
 
         # Create a resource list to hold the pdf resource
         resource_list.append(file_resource)
