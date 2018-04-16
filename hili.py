@@ -338,9 +338,11 @@ def get_post_ocr_contour_text(images, list_of_word_objects,
 
         if len(hili_text)==0:
             continue        
-        contoured_img = "poc_"+os.path.basename(img_path).split(".")[0]+".png"
+        contoured_img = "poc_"+os.path.basename(img_path).split(".")[0]+".jpg"
         all_contoured_imgs.append(contoured_img)
-        cv2.imwrite(main_path+"static/uploads/"+contoured_img,image)
+        cv2.imwrite(main_path+"static/uploads/"+contoured_img,image, 
+            [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+        # cv2.imwrite(main_path+"static/uploads/"+contoured_img,image)
         
         ocr_text = [hili_text[0]]
         for w in hili_text[1:]:
