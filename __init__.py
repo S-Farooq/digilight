@@ -4,7 +4,7 @@ from flask import Flask, request, redirect, g, render_template, Markup, session,
 import sys, os
 
 import time 
-# reload(sys)
+reload(sys)
 sys.setdefaultencoding('utf-8')
 
 import hili as hili
