@@ -106,6 +106,7 @@ def process_images(files, highlighted=True, pre_contour=False):
 
     
     json_data =hili.google_ocr_img([UPLOAD_PATH+x for x in contoured_imgs])
+    print "GOOGLE API RESPONDED.."
     list_of_word_obj = hili.get_word_objs(json_data)
     if highlighted:
         all_ocr_text, contoured_imgs = hili.get_post_ocr_contour_text(
