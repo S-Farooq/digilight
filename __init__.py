@@ -5,7 +5,7 @@ import sys, os
 
 import time 
 # reload(sys)
-# sys.setdefaultencoding('utf-8')
+sys.setdefaultencoding('utf-8')
 
 import hili as hili
 from werkzeug.utils import secure_filename
