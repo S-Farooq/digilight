@@ -112,7 +112,7 @@ def process_images(files, highlighted=True, pre_contour=False):
         all_ocr_text, contoured_imgs = hili.get_post_ocr_contour_text(
             [UPLOAD_PATH+x for x in files], 
             list_of_word_obj,
-            word_sel_thres = 5, 
+            word_sel_thres = 10, 
             hili_to_word_ratio=0.65,
             check_for_intersections=False)
     else:
