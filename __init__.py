@@ -21,7 +21,7 @@ app.debug = True
 #  Client Keys
 
 # Server-side Parameters
-CLIENT_SIDE_URL = "http://test.shaham.me"
+CLIENT_SIDE_URL = "http://digilight.shaham.me"
 REDIRECT_URI = "{}/callback/q".format(CLIENT_SIDE_URL)
 
 
